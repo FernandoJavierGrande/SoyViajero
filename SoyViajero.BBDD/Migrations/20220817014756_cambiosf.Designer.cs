@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SoyViajero.BBDD.Data;
 
@@ -11,9 +12,10 @@ using SoyViajero.BBDD.Data;
 namespace SoyViajero.BBDD.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20220817014756_cambiosf")]
+    partial class cambiosf
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,7 +36,6 @@ namespace SoyViajero.BBDD.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("TipoDeCuenta")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UsuarioId")
@@ -49,42 +50,40 @@ namespace SoyViajero.BBDD.Migrations
 
             modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.CuentaHostel", b =>
                 {
-                    b.Property<int>("CuentaId")
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
 
                     b.Property<string>("Ciudad")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CuentaId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Descripcion")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FotoPerfil")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Mail")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nombre")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Pais")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Provincia")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Telefono")
                         .HasColumnType("int");
 
-                    b.HasKey("CuentaId");
+                    b.HasKey("ID");
 
                     b.HasIndex(new[] { "CuentaId" }, "CuentaId_UQ")
                         .IsUnique();
@@ -94,16 +93,20 @@ namespace SoyViajero.BBDD.Migrations
 
             modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.CuentaViajero", b =>
                 {
-                    b.Property<int>("CuentaId")
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+
                     b.Property<string>("Apellido")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ciudad")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CuentaId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Descripcion")
                         .HasColumnType("nvarchar(max)");
@@ -111,26 +114,19 @@ namespace SoyViajero.BBDD.Migrations
                     b.Property<int>("Edad")
                         .HasColumnType("int");
 
-                    b.Property<string>("FotoPerfil")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Mail")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nombre")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Pais")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Provincia")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("CuentaId");
+                    b.HasKey("ID");
 
                     b.HasIndex(new[] { "CuentaId" }, "CuentaId_UQ")
                         .IsUnique()
@@ -148,24 +144,18 @@ namespace SoyViajero.BBDD.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Mail")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NombreUser")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Pass")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("fechaCreacion")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex(new[] { "NombreUser" }, "uqUser")
-                        .IsUnique();
 
                     b.ToTable("Usuarios");
                 });
@@ -182,8 +172,8 @@ namespace SoyViajero.BBDD.Migrations
             modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.CuentaHostel", b =>
                 {
                     b.HasOne("SoyViajero.BBDD.Data.Entidades.Cuenta", "Cuenta")
-                        .WithOne("CuentaHotel")
-                        .HasForeignKey("SoyViajero.BBDD.Data.Entidades.CuentaHostel", "CuentaId")
+                        .WithMany()
+                        .HasForeignKey("CuentaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -193,19 +183,12 @@ namespace SoyViajero.BBDD.Migrations
             modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.CuentaViajero", b =>
                 {
                     b.HasOne("SoyViajero.BBDD.Data.Entidades.Cuenta", "Cuenta")
-                        .WithOne("CuentaViajero")
-                        .HasForeignKey("SoyViajero.BBDD.Data.Entidades.CuentaViajero", "CuentaId")
+                        .WithMany()
+                        .HasForeignKey("CuentaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Cuenta");
-                });
-
-            modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.Cuenta", b =>
-                {
-                    b.Navigation("CuentaHotel");
-
-                    b.Navigation("CuentaViajero");
                 });
 
             modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.Usuario", b =>
