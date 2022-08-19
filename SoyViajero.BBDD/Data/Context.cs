@@ -15,7 +15,9 @@ namespace SoyViajero.BBDD.Data
 
         }
 
+
         public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<Cuenta> Cuenta{ get; set; }
         public DbSet<CuentaHostel> CuentasHostel { get; set; }
         public DbSet<CuentaViajero> CuentasViajeros { get; set; }
 

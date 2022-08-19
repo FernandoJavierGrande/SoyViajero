@@ -44,7 +44,7 @@ namespace SoyViajero.BBDD.Migrations
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("Cuenta");
+                    b.ToTable("Cuenta", (string)null);
                 });
 
             modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.CuentaHostel", b =>
@@ -89,7 +89,7 @@ namespace SoyViajero.BBDD.Migrations
                     b.HasIndex(new[] { "CuentaId" }, "CuentaId_UQ")
                         .IsUnique();
 
-                    b.ToTable("CuentasHostel");
+                    b.ToTable("CuentasHostel", (string)null);
                 });
 
             modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.CuentaViajero", b =>
@@ -136,7 +136,7 @@ namespace SoyViajero.BBDD.Migrations
                         .IsUnique()
                         .HasDatabaseName("CuentaId_UQ1");
 
-                    b.ToTable("CuentasViajeros");
+                    b.ToTable("CuentasViajeros", (string)null);
                 });
 
             modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.Usuario", b =>
@@ -167,7 +167,7 @@ namespace SoyViajero.BBDD.Migrations
                     b.HasIndex(new[] { "NombreUser" }, "uqUser")
                         .IsUnique();
 
-                    b.ToTable("Usuarios");
+                    b.ToTable("Usuarios", (string)null);
                 });
 
             modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.Cuenta", b =>

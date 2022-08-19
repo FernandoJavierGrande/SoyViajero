@@ -15,6 +15,7 @@ namespace SoyViajero.BBDD.Data.Entidades
         [Required]
         public int Telefono { get; set; }   
         public bool Activo { get; set; }
+
         [Key]
         public int CuentaId { get; set; }
 
