@@ -16,15 +16,15 @@ namespace SoyViajero.Server.Controllers
 
         #region Getsss
         [HttpGet]
-        public async Task<ActionResult<List<Cuenta>>> Get(string user)
+        public async Task<ActionResult<List<Usuario>>> Get(string user)
         {
             int IdUser = (from u in context.Usuarios where u.NombreUser == user /*&& u.Pass == pass*/ select u).First().Id;
 
             Console.WriteLine("id de user" + IdUser.ToString());
 
-            var cuentas = await context.Cuenta.Where(c => c.UsuarioId == IdUser).Include(x => x.CuentaViajero).Include(x=>x.CuentaHotel).ToListAsync();
+            //var cuentas = await context.Cuenta.Where(c => c.UsuarioId == IdUser).Include(x => x.CuentaViajero).Include(x=>x.CuentaHotel).ToListAsync();
 
-            return cuentas;
+            return null;
         }
         #endregion
     }

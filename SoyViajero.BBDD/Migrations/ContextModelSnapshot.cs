@@ -22,35 +22,10 @@ namespace SoyViajero.BBDD.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.Cuenta", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("FechaCreacion")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("TipoDeCuenta")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UsuarioId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UsuarioId");
-
-                    b.ToTable("Cuenta", (string)null);
-                });
-
             modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.CuentaHostel", b =>
                 {
-                    b.Property<int>("CuentaId")
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
@@ -84,18 +59,20 @@ namespace SoyViajero.BBDD.Migrations
                     b.Property<int>("Telefono")
                         .HasColumnType("int");
 
-                    b.HasKey("CuentaId");
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
 
-                    b.HasIndex(new[] { "CuentaId" }, "CuentaId_UQ")
-                        .IsUnique();
+                    b.HasKey("Id");
 
-                    b.ToTable("CuentasHostel", (string)null);
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("CuentasHostel");
                 });
 
             modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.CuentaViajero", b =>
                 {
-                    b.Property<int>("CuentaId")
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Apellido")
                         .IsRequired()
@@ -130,13 +107,15 @@ namespace SoyViajero.BBDD.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("CuentaId");
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
 
-                    b.HasIndex(new[] { "CuentaId" }, "CuentaId_UQ")
-                        .IsUnique()
-                        .HasDatabaseName("CuentaId_UQ1");
+                    b.HasKey("Id");
 
-                    b.ToTable("CuentasViajeros", (string)null);
+                    b.HasIndex("UsuarioId")
+                        .IsUnique();
+
+                    b.ToTable("CuentasViajeros");
                 });
 
             modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.Usuario", b =>
@@ -167,50 +146,32 @@ namespace SoyViajero.BBDD.Migrations
                     b.HasIndex(new[] { "NombreUser" }, "uqUser")
                         .IsUnique();
 
-                    b.ToTable("Usuarios", (string)null);
+                    b.ToTable("Usuarios");
                 });
 
-            modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.Cuenta", b =>
+            modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.CuentaHostel", b =>
                 {
                     b.HasOne("SoyViajero.BBDD.Data.Entidades.Usuario", null)
-                        .WithMany("cuentas")
+                        .WithMany("cuentasHostel")
                         .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.CuentaHostel", b =>
-                {
-                    b.HasOne("SoyViajero.BBDD.Data.Entidades.Cuenta", "Cuenta")
-                        .WithOne("CuentaHotel")
-                        .HasForeignKey("SoyViajero.BBDD.Data.Entidades.CuentaHostel", "CuentaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Cuenta");
-                });
-
             modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.CuentaViajero", b =>
                 {
-                    b.HasOne("SoyViajero.BBDD.Data.Entidades.Cuenta", "Cuenta")
-                        .WithOne("CuentaViajero")
-                        .HasForeignKey("SoyViajero.BBDD.Data.Entidades.CuentaViajero", "CuentaId")
+                    b.HasOne("SoyViajero.BBDD.Data.Entidades.Usuario", null)
+                        .WithOne("cuentaViajero")
+                        .HasForeignKey("SoyViajero.BBDD.Data.Entidades.CuentaViajero", "UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Cuenta");
-                });
-
-            modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.Cuenta", b =>
-                {
-                    b.Navigation("CuentaHotel");
-
-                    b.Navigation("CuentaViajero");
                 });
 
             modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.Usuario", b =>
                 {
-                    b.Navigation("cuentas");
+                    b.Navigation("cuentaViajero");
+
+                    b.Navigation("cuentasHostel");
                 });
 #pragma warning restore 612, 618
         }

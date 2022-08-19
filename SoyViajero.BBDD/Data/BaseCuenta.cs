@@ -10,7 +10,8 @@ namespace SoyViajero.BBDD.Data
     public class BaseCuenta
     {
         #region Props
-        //public int ID { get; set; }
+        [Key]
+        public string Id { get; set; }
         [Required(ErrorMessage ="El Nombre es un campo obligatorio")]
         public string Nombre { get; set; }
         [Required(ErrorMessage = "El Mail es un campo obligatorio")]

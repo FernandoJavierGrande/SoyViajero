@@ -27,7 +27,8 @@ namespace SoyViajero.BBDD.Data.Entidades
 
 
         #region Lista
-        public List<Cuenta> cuentas { get; set; }
+        public List<CuentaHostel> cuentasHostel { get; set; }
+        public CuentaViajero cuentaViajero { get; set; }
         #endregion
     }
 }

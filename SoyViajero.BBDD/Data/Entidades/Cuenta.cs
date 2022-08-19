@@ -24,8 +24,8 @@ namespace SoyViajero.BBDD.Data.Entidades
 
         //descomentar cuando esten puestas las clases/entidades
 
-        public CuentaHostel CuentaHotel { get; set; }
-        public CuentaViajero CuentaViajero { get; set; }
+        //public CuentaHostel CuentaHotel { get; set; }
+        //public CuentaViajero CuentaViajero { get; set; }
         //public List<Comentario> Comentarios { get; set; }
         //public List<Publicacion> Publicaciones { get; set; }
 

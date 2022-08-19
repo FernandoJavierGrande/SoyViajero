@@ -7,8 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SoyViajero.BBDD.Data.Entidades
-{
-    [Index(nameof(CuentaId), Name = "CuentaId_UQ", IsUnique = true)] 
+{   
+
+    //[Index(nameof(Id), Name = "CuentaId_UQ", IsUnique = true)] 
     public class CuentaViajero : BaseCuenta
     {
         #region Props
@@ -16,11 +17,10 @@ namespace SoyViajero.BBDD.Data.Entidades
         public int Edad { get; set; }
         [Required]
         public string Apellido { get; set; }
-        [Key]
-        public int CuentaId { get; set; }
+        public int UsuarioId { get; set; }
+
 
         #endregion
 
-        public Cuenta Cuenta { get; set; }
     }
 }
