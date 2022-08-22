@@ -85,7 +85,34 @@ namespace SoyViajero.Server.Controllers
         }
 
 
-        
+        [HttpPost("/AgregarViajero")]
+        public async Task<ActionResult<CuentaHostel>> post(CuentaViajero viajero)
+        {
+            if (!UserExist(viajero.UsuarioId))
+            {
+                 
+                var cuentaV = context.CuentasViajeros.Where(c => c.UsuarioId == viajero.UsuarioId).Select
+                    (x => x.Id).FirstOrDefault();
+
+                if (cuentaV!=null)
+                    return BadRequest("No se puede agregar otra cuenta de 'Viajero', pero puedes modificar los datos de la que ya tienes ");
+                try
+                {
+                    context.CuentasViajeros.Add(viajero);
+                    await context.SaveChangesAsync();
+                    return Ok();
+                }
+                catch (Exception e)
+                {
+                    return BadRequest("Error al Guardar el nuevo hostel " + e);
+                }
+            }
+            else
+                return NotFound();
+        }
+
+
+
         private bool UserExist(string userName)
         {
             var user = context.Usuarios.Where(u => u.NombreUser == userName).FirstOrDefault();
