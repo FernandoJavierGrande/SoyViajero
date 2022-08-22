@@ -40,7 +40,7 @@ namespace SoyViajero.Server.Controllers
         }
         #endregion
 
-
+        #region post
         [HttpPost]
         public async Task<ActionResult<bool>> Post(Usuario usuario)
         {
@@ -63,14 +63,17 @@ namespace SoyViajero.Server.Controllers
 
         }
 
-
+        
         [HttpPost("/AgregarHostel")]
         public async Task<ActionResult<CuentaHostel>>post(CuentaHostel hostel)
         {
+
+            
             if (!UserExist(hostel.UsuarioId))
             {
                 try
                 {
+                    hostel.Id = IdCuentaH();
                     context.CuentasHostel.Add(hostel);
                     await context.SaveChangesAsync();
                     return Ok();
@@ -84,13 +87,14 @@ namespace SoyViajero.Server.Controllers
                 return NotFound();
         }
 
+        
 
         [HttpPost("/AgregarViajero")]
         public async Task<ActionResult<CuentaHostel>> post(CuentaViajero viajero)
         {
             if (!UserExist(viajero.UsuarioId))
             {
-                 
+
                 var cuentaV = context.CuentasViajeros.Where(c => c.UsuarioId == viajero.UsuarioId).Select
                     (x => x.Id).FirstOrDefault();
 
@@ -98,6 +102,8 @@ namespace SoyViajero.Server.Controllers
                     return BadRequest("No se puede agregar otra cuenta de 'Viajero', pero puedes modificar los datos de la que ya tienes ");
                 try
                 {
+                    viajero.Id = IdCuentaV();
+
                     context.CuentasViajeros.Add(viajero);
                     await context.SaveChangesAsync();
                     return Ok();
@@ -111,23 +117,108 @@ namespace SoyViajero.Server.Controllers
                 return NotFound();
         }
 
+        #endregion
 
+        #region Delete
+        [HttpDelete("/eliminarCuentaViajero")]
+        public async Task<ActionResult> delete(int idUser)
+        {
+            if (UserExist(idUser))
+                return  NotFound("Error, intente nuevamente");
 
-        private bool UserExist(string userName)
+            var viajeroElim = context.CuentasViajeros
+                .Where(c => c.UsuarioId == idUser)
+                .FirstOrDefault();
+
+            if (viajeroElim == null) 
+                return NotFound("Cuenta incorrecta");
+
+            try
+            {
+                context.CuentasViajeros.Remove(viajeroElim);
+
+                await context.SaveChangesAsync();
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("Ocurrio un error intente nuevamente");
+            }
+        }
+        #endregion
+
+        #region metodos
+
+        private bool UserExist(string userName) //confirma si el usuario con nombre x existe
         {
             var user = context.Usuarios.Where(u => u.NombreUser == userName).FirstOrDefault();
             if (user != null)
                 return false;
             return true;
         }
-        private bool UserExist(int userId)
+        private bool UserExist(int userId) // cpnfirma si existe un usuario por medio del id
         {
             var user = context.Usuarios.Where(u => u.Id == userId).FirstOrDefault();
             if (user != null)
                 return false;
             return true;
         }
+      
 
+        private string IdCuentaH() // generan ids aleatorios con identificador segun el tipo de cuenta
+        {
+            Random random = new Random();
+            int numero;
+            string id;
+            bool repetir = false;
+            
+            do
+            {
 
+                numero = random.Next(1000, 100000);
+
+                id = "h" + numero.ToString();
+
+                Console.WriteLine(id);
+               
+                var aux = context.CuentasHostel
+                    .Where(c => c.Id ==id)
+                    .FirstOrDefault();
+
+                if (aux != null)
+                    repetir = true;
+
+            } while (repetir);
+
+            return id;
+        }
+        private string IdCuentaV()
+        {
+            Random random = new Random();
+            int numero;
+            string id;
+            bool repetir = false;
+
+            do
+            {
+
+                numero = random.Next(1000, 100000);
+
+                id = "v" + numero.ToString();
+
+                Console.WriteLine(id);
+
+                var aux = context.CuentasViajeros
+                    .Where(c => c.Id == id)
+                    .FirstOrDefault();
+
+                if (aux != null)
+                    repetir = true;
+
+            } while (repetir);
+
+            return id;
+        }
+        #endregion
     }
 }
