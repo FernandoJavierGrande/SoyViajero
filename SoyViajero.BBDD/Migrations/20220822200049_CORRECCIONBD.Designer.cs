@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SoyViajero.BBDD.Data;
 
@@ -11,9 +12,10 @@ using SoyViajero.BBDD.Data;
 namespace SoyViajero.BBDD.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20220822200049_CORRECCIONBD")]
+    partial class CORRECCIONBD
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,12 +27,6 @@ namespace SoyViajero.BBDD.Migrations
             modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.Comentario", b =>
                 {
                     b.Property<string>("ID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("CuentaHostelId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("CuentaViajeroId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("CuentasId")
@@ -51,10 +47,6 @@ namespace SoyViajero.BBDD.Migrations
                         .HasColumnType("nvarchar(300)");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("CuentaHostelId");
-
-                    b.HasIndex("CuentaViajeroId");
 
                     b.HasIndex("PublicacionesID");
 
@@ -165,10 +157,7 @@ namespace SoyViajero.BBDD.Migrations
                     b.Property<DateTime>("FechaCreacion")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Foto")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("PublicacionId")
+                    b.Property<int>("Publicacion1Id")
                         .HasColumnType("int");
 
                     b.Property<string>("PublicacionesID")
@@ -181,7 +170,7 @@ namespace SoyViajero.BBDD.Migrations
                     b.ToTable("fotos_publicaciones");
                 });
 
-            modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.Publicacion", b =>
+            modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.Publicacion1", b =>
                 {
                     b.Property<string>("ID")
                         .HasColumnType("nvarchar(450)");
@@ -197,17 +186,7 @@ namespace SoyViajero.BBDD.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("cuentaHostelId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("cuentaViajeroId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("ID");
-
-                    b.HasIndex("cuentaHostelId");
-
-                    b.HasIndex("cuentaViajeroId");
 
                     b.ToTable("Publicaciones");
                 });
@@ -245,15 +224,7 @@ namespace SoyViajero.BBDD.Migrations
 
             modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.Comentario", b =>
                 {
-                    b.HasOne("SoyViajero.BBDD.Data.Entidades.CuentaHostel", null)
-                        .WithMany("comentariosH")
-                        .HasForeignKey("CuentaHostelId");
-
-                    b.HasOne("SoyViajero.BBDD.Data.Entidades.CuentaViajero", null)
-                        .WithMany("comentariosV")
-                        .HasForeignKey("CuentaViajeroId");
-
-                    b.HasOne("SoyViajero.BBDD.Data.Entidades.Publicacion", "Publicaciones")
+                    b.HasOne("SoyViajero.BBDD.Data.Entidades.Publicacion1", "Publicaciones")
                         .WithMany("Comentarios")
                         .HasForeignKey("PublicacionesID");
 
@@ -280,43 +251,14 @@ namespace SoyViajero.BBDD.Migrations
 
             modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.fotos_publicacion", b =>
                 {
-                    b.HasOne("SoyViajero.BBDD.Data.Entidades.Publicacion", "Publicaciones")
+                    b.HasOne("SoyViajero.BBDD.Data.Entidades.Publicacion1", "Publicaciones")
                         .WithMany("fotos_publicaciones")
                         .HasForeignKey("PublicacionesID");
 
                     b.Navigation("Publicaciones");
                 });
 
-            modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.Publicacion", b =>
-                {
-                    b.HasOne("SoyViajero.BBDD.Data.Entidades.CuentaHostel", "cuentaHostel")
-                        .WithMany("publicacionesH")
-                        .HasForeignKey("cuentaHostelId");
-
-                    b.HasOne("SoyViajero.BBDD.Data.Entidades.CuentaViajero", "cuentaViajero")
-                        .WithMany("publicacionesV")
-                        .HasForeignKey("cuentaViajeroId");
-
-                    b.Navigation("cuentaHostel");
-
-                    b.Navigation("cuentaViajero");
-                });
-
-            modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.CuentaHostel", b =>
-                {
-                    b.Navigation("comentariosH");
-
-                    b.Navigation("publicacionesH");
-                });
-
-            modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.CuentaViajero", b =>
-                {
-                    b.Navigation("comentariosV");
-
-                    b.Navigation("publicacionesV");
-                });
-
-            modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.Publicacion", b =>
+            modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.Publicacion1", b =>
                 {
                     b.Navigation("Comentarios");
 
