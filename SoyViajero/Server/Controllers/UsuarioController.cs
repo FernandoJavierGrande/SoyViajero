@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using SoyViajero.BBDD.Data;
 using SoyViajero.BBDD.Data.Entidades;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace SoyViajero.Server.Controllers
 {
@@ -16,12 +18,14 @@ namespace SoyViajero.Server.Controllers
 
         #region Getsss
         [HttpGet]
-        public async Task<ActionResult<Usuario>> Get(string user)
+        public async Task<ActionResult<Usuario>> Get(string user, string pass)
         {
             int IdUser;
             try
             {
-                IdUser = (from u in context.Usuarios where u.NombreUser == user /*&& u.Pass == pass*/ select u).First().Id;
+                pass = ConvertirSha256(pass);
+
+                IdUser = (from u in context.Usuarios where u.NombreUser == user && u.Pass == pass select u).First().Id;
 
             }
             catch (Exception)
@@ -218,6 +222,22 @@ namespace SoyViajero.Server.Controllers
             } while (repetir);
 
             return id;
+        }
+
+
+        public static string ConvertirSha256(string texto)
+        {
+            StringBuilder sb = new StringBuilder();
+            using (SHA256 hash = SHA256.Create())
+            {
+                Encoding enc = Encoding.UTF8;
+                byte[] result = hash.ComputeHash(enc.GetBytes(texto));
+                foreach (byte b in result)
+                {
+                    sb.Append(b.ToString("x2"));
+                }
+            }
+            return sb.ToString();
         }
         #endregion
     }
