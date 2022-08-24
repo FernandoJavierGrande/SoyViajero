@@ -20,6 +20,7 @@ namespace SoyViajero.BBDD.Data
         public DbSet<CuentaViajero> CuentasViajeros { get; set; }
         public DbSet<Publicacion> Publicaciones { get; set; }
         public DbSet<fotos_publicacion> fotos_publicaciones { get; set; }
+        public DbSet<Comentario> Comentarios { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) //crea las relaciones fk
