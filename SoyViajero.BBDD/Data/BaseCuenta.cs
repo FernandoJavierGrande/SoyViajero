@@ -13,6 +13,7 @@ namespace SoyViajero.BBDD.Data
         [Key]
         public string Id { get; set; }
         [Required(ErrorMessage ="El Nombre es un campo obligatorio")]
+        [MinLength(2, ErrorMessage = $"El nombre no puede tener menos de [1] caracteres")]
         public string Nombre { get; set; }
         [Required(ErrorMessage = "El Mail es un campo obligatorio")]
         public string Mail { get; set; } //Preguntar lo del mail 

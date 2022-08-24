@@ -10,7 +10,7 @@ namespace SoyViajero.BBDD.Data
     public class EntityBase
     {
         [Required]
-        public string ID { get; set; }
+        public int ID { get; set; }
         public DateTime FechaCreacion { get; set; }
     }
 }
