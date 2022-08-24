@@ -15,11 +15,13 @@ namespace SoyViajero.BBDD.Data.Entidades
 
         //PublicacionId
         [Required(ErrorMessage = "Id publicacion es obligatorio")]
-        public int Publicacion1Id { get; set; }
-        public Publicacion Publicaciones { get; set; }
+        public int PublicacionId { get; set; }
+
+
+        //public Publicacion Publicaciones { get; set; }
 
         //CuentasId
         [Required(ErrorMessage = "Cuenta es obligatorio")]
-        public int CuentasId { get; set; }
+        public string CuentasId { get; set; }
     }
 }

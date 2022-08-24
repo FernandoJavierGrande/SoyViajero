@@ -8,19 +8,48 @@ using SoyViajero.BBDD.Data;
 namespace SoyViajero.Server.Controllers
 {
     [ApiController]
-    [Route("api/NuevoUsuario")]
+    [Route("api/Login")]
     public class LoginController : ControllerBase
     {
         private readonly Context context;
 
         public  LoginController(Context context) => this.context = context;
 
-        
-        [HttpPost]
+
+
+
+        #region get
+        [HttpGet]
+        public async Task<ActionResult<int>> Get(string usuario,string pass)
+        {
+            {
+                int IdUser;
+                try
+                {
+                    pass = ConvertirSha256(pass);
+
+                    IdUser = (from u in context.Usuarios where u.NombreUser == usuario && u.Pass == pass select u).First().Id;
+
+
+
+                }
+                catch (Exception)
+                {
+
+                    return BadRequest("El usuario o contraseña no son correctos");
+                }
+
+                return IdUser;
+            }
+        }
+            #endregion
+
+            #region post
+            [HttpPost]
         public ActionResult Registro(Usuario usuario)
         {
             usuario.Pass = ConvertirSha256(usuario.Pass);
-            
+
             try
             {
                 if (!UserExist(usuario.NombreUser))
@@ -34,11 +63,12 @@ namespace SoyViajero.Server.Controllers
             }
             catch (Exception)
             {
-
                 return BadRequest("Error, vuelva a intentar");
-                
             }
         }
+        #endregion
+
+
 
         public static string ConvertirSha256(string texto)
         {

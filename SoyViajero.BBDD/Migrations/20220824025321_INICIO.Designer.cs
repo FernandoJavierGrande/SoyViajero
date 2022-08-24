@@ -12,8 +12,8 @@ using SoyViajero.BBDD.Data;
 namespace SoyViajero.BBDD.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20220819224046_replanteoBBDD")]
-    partial class replanteoBBDD
+    [Migration("20220824025321_INICIO")]
+    partial class INICIO
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,6 +23,46 @@ namespace SoyViajero.BBDD.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.Comentario", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+
+                    b.Property<string>("CuentaHostelId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CuentaViajeroId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CuentasId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("FechaCreacion")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PublicacionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("texto")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("CuentaHostelId");
+
+                    b.HasIndex("CuentaViajeroId");
+
+                    b.HasIndex("PublicacionId");
+
+                    b.ToTable("Comentarios");
+                });
 
             modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.CuentaHostel", b =>
                 {
@@ -120,6 +160,65 @@ namespace SoyViajero.BBDD.Migrations
                     b.ToTable("CuentasViajeros");
                 });
 
+            modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.fotos_publicacion", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+
+                    b.Property<DateTime>("FechaCreacion")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Foto")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("PublicacionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("PublicacionId");
+
+                    b.ToTable("fotos_publicaciones");
+                });
+
+            modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.Publicacion", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+
+                    b.Property<string>("CuentasId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("FechaCreacion")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Texto")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("cuentaHostelId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("cuentaViajeroId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("cuentaHostelId");
+
+                    b.HasIndex("cuentaViajeroId");
+
+                    b.ToTable("Publicaciones");
+                });
+
             modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.Usuario", b =>
                 {
                     b.Property<int>("Id")
@@ -151,6 +250,23 @@ namespace SoyViajero.BBDD.Migrations
                     b.ToTable("Usuarios");
                 });
 
+            modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.Comentario", b =>
+                {
+                    b.HasOne("SoyViajero.BBDD.Data.Entidades.CuentaHostel", null)
+                        .WithMany("comentariosH")
+                        .HasForeignKey("CuentaHostelId");
+
+                    b.HasOne("SoyViajero.BBDD.Data.Entidades.CuentaViajero", null)
+                        .WithMany("comentariosV")
+                        .HasForeignKey("CuentaViajeroId");
+
+                    b.HasOne("SoyViajero.BBDD.Data.Entidades.Publicacion", null)
+                        .WithMany("Comentarios")
+                        .HasForeignKey("PublicacionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.CuentaHostel", b =>
                 {
                     b.HasOne("SoyViajero.BBDD.Data.Entidades.Usuario", null)
@@ -167,6 +283,53 @@ namespace SoyViajero.BBDD.Migrations
                         .HasForeignKey("SoyViajero.BBDD.Data.Entidades.CuentaViajero", "UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.fotos_publicacion", b =>
+                {
+                    b.HasOne("SoyViajero.BBDD.Data.Entidades.Publicacion", "Publicaciones")
+                        .WithMany("fotos_publicaciones")
+                        .HasForeignKey("PublicacionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Publicaciones");
+                });
+
+            modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.Publicacion", b =>
+                {
+                    b.HasOne("SoyViajero.BBDD.Data.Entidades.CuentaHostel", "cuentaHostel")
+                        .WithMany("publicacionesH")
+                        .HasForeignKey("cuentaHostelId");
+
+                    b.HasOne("SoyViajero.BBDD.Data.Entidades.CuentaViajero", "cuentaViajero")
+                        .WithMany("publicacionesV")
+                        .HasForeignKey("cuentaViajeroId");
+
+                    b.Navigation("cuentaHostel");
+
+                    b.Navigation("cuentaViajero");
+                });
+
+            modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.CuentaHostel", b =>
+                {
+                    b.Navigation("comentariosH");
+
+                    b.Navigation("publicacionesH");
+                });
+
+            modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.CuentaViajero", b =>
+                {
+                    b.Navigation("comentariosV");
+
+                    b.Navigation("publicacionesV");
+                });
+
+            modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.Publicacion", b =>
+                {
+                    b.Navigation("Comentarios");
+
+                    b.Navigation("fotos_publicaciones");
                 });
 
             modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.Usuario", b =>

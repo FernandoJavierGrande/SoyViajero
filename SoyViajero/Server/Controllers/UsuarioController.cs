@@ -17,55 +17,55 @@ namespace SoyViajero.Server.Controllers
 
 
         #region Getsss
-        [HttpGet]
-        public async Task<ActionResult<Usuario>> Get(string user, string pass)
-        {
-            int IdUser;
-            try
-            {
-                pass = ConvertirSha256(pass);
+        //[HttpGet]
+        //public async Task<ActionResult<Usuario>> Get(string user, string pass)
+        //{
+        //    int IdUser;
+        //    try
+        //    {
+        //        pass = ConvertirSha256(pass);
 
-                IdUser = (from u in context.Usuarios where u.NombreUser == user && u.Pass == pass select u).First().Id;
+        //        IdUser = (from u in context.Usuarios where u.NombreUser == user && u.Pass == pass select u).First().Id;
 
-            }
-            catch (Exception)
-            {
+        //    }
+        //    catch (Exception)
+        //    {
 
-                return BadRequest("El usuario o contraseña no son correctos");
-            }
+        //        return BadRequest("El usuario o contraseña no son correctos");
+        //    }
 
-            var cuentas = await context.Usuarios
-                            .Where(u => u.Id == IdUser)
-                            .Include(h => h.cuentasHostel)
-                            .Include(v => v.cuentaViajero)
-                            .FirstOrDefaultAsync();
+        //    var cuentas = await context.Usuarios
+        //                    .Where(u => u.Id == IdUser)
+        //                    .Include(h => h.cuentasHostel)
+        //                    .Include(v => v.cuentaViajero)
+        //                    .FirstOrDefaultAsync();
 
-            return cuentas;
-        }
+        //    return cuentas;
+        //}
         #endregion
 
         #region post
-        [HttpPost]
-        public async Task<ActionResult<bool>> Post(Usuario usuario)
-        {
+        //[HttpPost]
+        //public async Task<ActionResult<bool>> Post(Usuario usuario)
+        //{
 
-            try
-            {
-                if (!UserExist(usuario.NombreUser))
-                    return BadRequest($"El usuario {usuario.NombreUser} ya existe");
+        //    try
+        //    {
+        //        if (!UserExist(usuario.NombreUser))
+        //            return BadRequest($"El usuario {usuario.NombreUser} ya existe");
 
-                context.Usuarios.Add(usuario);
+        //        context.Usuarios.Add(usuario);
 
-                await context.SaveChangesAsync();
-                return Ok();
-            }
-            catch (Exception)
-            {
+        //        await context.SaveChangesAsync();
+        //        return Ok();
+        //    }
+        //    catch (Exception)
+        //    {
 
-                return BadRequest("Error al agregar nuevo usuario");
-            }
+        //        return BadRequest("Error al agregar nuevo usuario");
+        //    }
 
-        }
+        //}
 
         
         [HttpPost("/AgregarHostel")]
@@ -99,8 +99,10 @@ namespace SoyViajero.Server.Controllers
             if (!UserExist(viajero.UsuarioId))
             {
 
-                var cuentaV = context.CuentasViajeros.Where(c => c.UsuarioId == viajero.UsuarioId).Select
-                    (x => x.Id).FirstOrDefault();
+                var cuentaV = context.CuentasViajeros
+                    .Where(c => c.UsuarioId == viajero.UsuarioId)
+                    .Select(x => x.Id)
+                    .FirstOrDefault();
 
                 if (cuentaV!=null)
                     return BadRequest("No se puede agregar otra cuenta de 'Viajero', pero puedes modificar los datos de la que ya tienes ");
