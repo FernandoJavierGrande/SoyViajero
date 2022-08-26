@@ -4,6 +4,8 @@ using Microsoft.OpenApi.Models;
 using SoyViajero.BBDD.Data;
 using System.Text.Json.Serialization;
 
+using Microsoft.AspNetCore.Authentication.Cookies;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -21,6 +23,13 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Viajero", Version = "v1" });
 });
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(option => {
+        option.LoginPath = "/api/Login";
+        option.ExpireTimeSpan = TimeSpan.FromMinutes(20);
+        option.AccessDeniedPath = "/counter";
+    });
 
 var app = builder.Build();
 
@@ -46,6 +55,9 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
+
+app.UseAuthorization();
 
 app.MapRazorPages();
 app.MapControllers();

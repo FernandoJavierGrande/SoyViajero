@@ -3,10 +3,14 @@ using Microsoft.EntityFrameworkCore;
 using SoyViajero.BBDD.Data;
 using SoyViajero.BBDD.Data.Entidades;
 
+using Microsoft.AspNetCore.Authorization;
+
+
 namespace SoyViajero.Server.Controllers
 {
     [ApiController]
     [Route("api/Publicacion")]
+    [Authorize]
     public class PublicacionController : ControllerBase
     {
         private readonly Context context;
@@ -16,7 +20,27 @@ namespace SoyViajero.Server.Controllers
             this.context = contexto;
         }
 
+
         #region GET
+        [HttpGet("/Publicaciones")]
+        public async Task<ActionResult<List<Publicacion>>> Get()
+        {
+            var CuentaActivaId = User.Claims.Where(c => c.Type == "cuentaActiva").Select(x => x.Value).FirstOrDefault();
+            if (CuentaActivaId == null)
+                return NotFound();
+
+            var publicaciones = await context.Publicaciones
+                                .Where(p => p.CuentasId == CuentaActivaId)
+                                .ToListAsync();
+            
+            if (publicaciones == null)
+            {
+                return NotFound($"No hay publicaciones para mostrar");
+            }
+            return publicaciones;
+        }
+
+
         [HttpGet("{id:int}")] //METODO HTTP GET. ASICRONA. 
         public async Task<ActionResult<Publicacion>> Get(int id)
         {
@@ -32,17 +56,25 @@ namespace SoyViajero.Server.Controllers
 
         #region post
         [HttpPost]
-        public async Task<ActionResult<int>> Post(Publicacion publica)
+        public async Task<ActionResult<int>> Post(Publicacion publicacion)
         {
             try
-            {
-                context.Publicaciones.Add(publica);
+            {   /*obtiene id de la cuenta que se encuentra activa/en uso */
+                var cuentaActivaId = User.Claims.Where(c => c.Type == "cuentaActiva").Select(x => x.Value).FirstOrDefault();
+
+                if (cuentaActivaId == null)
+                    return NotFound("No se puede realizar la publicacion");
+
+                /*usa la cuenta h o v activa para realizar la publicacion bajo esa cuenta*/
+                publicacion.CuentasId = cuentaActivaId;
+
+
+                context.Publicaciones.Add(publicacion);
                 await context.SaveChangesAsync();
-                return publica.ID;
+                return publicacion.ID;
             }
             catch (Exception e)
             {
-
                 return BadRequest(e.Message);
             }
         }

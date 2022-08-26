@@ -18,12 +18,13 @@ namespace SoyViajero.BBDD.Data.Entidades
         //CuentasId
 
         [ForeignKey("CuentaHostel")]
+        
         [Required(ErrorMessage = "Cuenta es obligatorio")]
         public string CuentasId { get; set; }
 
 
-        public CuentaHostel cuentaHostel { get; set; }
-        public CuentaViajero cuentaViajero { get; set; }
+        public CuentaHostel cuentaHostel;
+        public CuentaViajero cuentaViajero;
 
 
         public List<Comentario> Comentarios { get; set; }
