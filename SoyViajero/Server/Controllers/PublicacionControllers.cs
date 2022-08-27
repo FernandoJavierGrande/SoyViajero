@@ -48,8 +48,6 @@ namespace SoyViajero.Server.Controllers
         }
         #endregion
 
-
-
         #region Delete
         [HttpDelete("{id:int}")]
         public ActionResult Delete(int id)
@@ -69,14 +67,9 @@ namespace SoyViajero.Server.Controllers
             catch (Exception e)
             {
                 return BadRequest($"La publicacion no pudo ser eliminada. {e.Message}");
-
             }
-
         }
         #endregion
-
-
-
     }
 }
 
