@@ -6,7 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
+
 
 namespace SoyViajero.Server.Controllers
 {
@@ -29,9 +29,10 @@ namespace SoyViajero.Server.Controllers
             
             try
             {
+                // extraigo el id del usuario que inicio la sesion
                  var IdUser = int.Parse(User.Claims.Where(x => x.Type == "Id").Select(c => c.Value).First());
 
-                Console.WriteLine($"claims id {IdUser}");
+                //Console.WriteLine($"claims id {IdUser}");
 
                 var cuentas = await context.Usuarios
                             .Where(u => u.Id == IdUser)
@@ -94,7 +95,6 @@ namespace SoyViajero.Server.Controllers
             }
         }
 
-        
 
         [HttpPost("/AgregarViajero")]
         public async Task<ActionResult<CuentaHostel>> post(CuentaViajero viajero)

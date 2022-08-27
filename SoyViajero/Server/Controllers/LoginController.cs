@@ -29,35 +29,35 @@ namespace SoyViajero.Server.Controllers
             {
                 pass = ConvertirSha256(pass);
 
-                var IdUser = context.Usuarios
+                var IdUser = context.Usuarios      // compara que las cuenta y la clave coincida
                     .Where(x => x.NombreUser == usuario && x.Pass == pass)
                     .Select(u => u.Id)
                     .FirstOrDefault();
 
-                if (IdUser == 0)
-                    throw new Exception();
+                if (IdUser == 0) // si no devuelve nada es porque no coincide
+                    return BadRequest("El usuario o contraseña no son correctos " );
 
-                var cuentasH = await context.CuentasHostel
+                var cuentasH = await context.CuentasHostel // busca las cuentas de hostel que tenga registradas
                     .Where(c => c.UsuarioId == IdUser)
                     .Select(x =>x.Id)
                     .ToListAsync();
                 
-                var cuentasV = context.CuentasViajeros
+                var cuentasV = context.CuentasViajeros // selecciona si tiene la cuenta de viajero
                     .Where(c=>c.UsuarioId==IdUser)
                     .Select(x =>x.Id)
                     .FirstOrDefault();
 
-                var claims = new List<Claim> 
+                var claims = new List<Claim> //guarda los datos de la sesion 
                 {
                     new Claim(ClaimTypes.Name, usuario),
                     new Claim("Id", IdUser.ToString()),
                 };
 
                 if (cuentasV!=null)
-                    claims.Add(new Claim("cuentaV", cuentasV));
+                    claims.Add(new Claim("cuentaV", cuentasV)); // guarda id de viajero
 
 
-                for (int i = 0; i < cuentasH.Count; i++)
+                for (int i = 0; i < cuentasH.Count; i++)       // por cada cuentaH guarda el id en un nuevo claim
                 {
 
                     claims.Add(new Claim($"cuentaH{i}", cuentasH[i]));
@@ -67,9 +67,11 @@ namespace SoyViajero.Server.Controllers
                     }
                 }
 
-                foreach (var item in claims)
+                foreach (var item in claims)    //prueba
                     Console.WriteLine($"+++++++{item.Type} = {item.Value}");
                 
+
+                // finaliza el guardado de los datos de la sesion
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
@@ -80,9 +82,9 @@ namespace SoyViajero.Server.Controllers
 
                 return Ok($"id user {IdUser}");
             }
-            catch (Exception e)
+            catch (Exception )
             {
-                return BadRequest("El usuario o contraseña no son correctos " + e);
+                return BadRequest("El usuario o contraseña no son correctos ");
             }
         }
         
