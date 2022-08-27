@@ -22,6 +22,6 @@ namespace SoyViajero.BBDD.Data.Entidades
 
         //CuentasId
         [Required(ErrorMessage = "Cuenta es obligatorio")]
-        public string CuentasId { get; set; }
+        public string CuentasId { get; set; } 
     }
 }

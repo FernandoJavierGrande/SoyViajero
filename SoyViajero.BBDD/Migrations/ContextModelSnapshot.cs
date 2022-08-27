@@ -59,7 +59,7 @@ namespace SoyViajero.BBDD.Migrations
 
                     b.HasIndex("PublicacionId");
 
-                    b.ToTable("Comentarios");
+                    b.ToTable("Comentarios", (string)null);
                 });
 
             modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.CuentaHostel", b =>
@@ -106,7 +106,7 @@ namespace SoyViajero.BBDD.Migrations
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("CuentasHostel");
+                    b.ToTable("CuentasHostel", (string)null);
                 });
 
             modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.CuentaViajero", b =>
@@ -155,7 +155,7 @@ namespace SoyViajero.BBDD.Migrations
                     b.HasIndex("UsuarioId")
                         .IsUnique();
 
-                    b.ToTable("CuentasViajeros");
+                    b.ToTable("CuentasViajeros", (string)null);
                 });
 
             modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.fotos_publicacion", b =>
@@ -179,7 +179,7 @@ namespace SoyViajero.BBDD.Migrations
 
                     b.HasIndex("PublicacionId");
 
-                    b.ToTable("fotos_publicaciones");
+                    b.ToTable("fotos_publicaciones", (string)null);
                 });
 
             modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.Publicacion", b =>
@@ -214,7 +214,7 @@ namespace SoyViajero.BBDD.Migrations
 
                     b.HasIndex("cuentaViajeroId");
 
-                    b.ToTable("Publicaciones");
+                    b.ToTable("Publicaciones", (string)null);
                 });
 
             modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.Usuario", b =>
@@ -245,7 +245,7 @@ namespace SoyViajero.BBDD.Migrations
                     b.HasIndex(new[] { "NombreUser" }, "uqUser")
                         .IsUnique();
 
-                    b.ToTable("Usuarios");
+                    b.ToTable("Usuarios", (string)null);
                 });
 
             modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.Comentario", b =>

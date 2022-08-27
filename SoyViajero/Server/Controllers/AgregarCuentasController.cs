@@ -5,43 +5,48 @@ using SoyViajero.BBDD.Data.Entidades;
 using System.Security.Cryptography;
 using System.Text;
 
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+
 namespace SoyViajero.Server.Controllers
 {
     [ApiController]
-    [Route("api/Usuario")]
-    public class UsuarioController : ControllerBase
+    [Route("api/Cuentas")]
+    [Authorize]
+    public class AgregarCuentasController : ControllerBase
     {
         private readonly Context context;
+        
 
-        public UsuarioController(Context context) => this.context = context;
+        public AgregarCuentasController(Context context)
+            => this.context = context;
+            
 
+        #region Get
+        [HttpGet]
+        public async Task<ActionResult<Usuario>> Get()
+        {  
+            
+            try
+            {
+                 var IdUser = int.Parse(User.Claims.Where(x => x.Type == "Id").Select(c => c.Value).First());
 
-        #region Getsss
-        //[HttpGet]
-        //public async Task<ActionResult<Usuario>> Get(string user, string pass)
-        //{
-        //    int IdUser;
-        //    try
-        //    {
-        //        pass = ConvertirSha256(pass);
+                Console.WriteLine($"claims id {IdUser}");
 
-        //        IdUser = (from u in context.Usuarios where u.NombreUser == user && u.Pass == pass select u).First().Id;
+                var cuentas = await context.Usuarios
+                            .Where(u => u.Id == IdUser)
+                            .Include(h => h.cuentasHostel)
+                            .Include(v => v.cuentaViajero)
+                            .FirstOrDefaultAsync();
+                return cuentas;
+            }
+            catch (Exception)
+            {
 
-        //    }
-        //    catch (Exception)
-        //    {
+                return BadRequest("");
+            }
 
-        //        return BadRequest("El usuario o contraseña no son correctos");
-        //    }
-
-        //    var cuentas = await context.Usuarios
-        //                    .Where(u => u.Id == IdUser)
-        //                    .Include(h => h.cuentasHostel)
-        //                    .Include(v => v.cuentaViajero)
-        //                    .FirstOrDefaultAsync();
-
-        //    return cuentas;
-        //}
+        }
         #endregion
 
         #region post
@@ -67,28 +72,26 @@ namespace SoyViajero.Server.Controllers
 
         //}
 
-        
-        [HttpPost("/AgregarHostel")]
-        public async Task<ActionResult<CuentaHostel>>post(CuentaHostel hostel)
-        {
 
-            
-            if (!UserExist(hostel.UsuarioId))
+        [HttpPost("/AgregarHostel")]
+        public async Task<ActionResult<CuentaHostel>>post(CuentaHostel hostel) // agrega una nueva cuenta de hostel
+        {
+            try
             {
-                try
-                {
-                    hostel.Id = IdCuentaH();
-                    context.CuentasHostel.Add(hostel);
-                    await context.SaveChangesAsync();
-                    return Ok();
-                }
-                catch (Exception e)
-                {
-                    return BadRequest("Error al Guardar el nuevo hostel " + e );
-                }
+                hostel.UsuarioId = int.Parse(User.Claims.Where(x => x.Type == "Id").Select(c => c.Value).First());
+                hostel.Id = crearIdH();
+
+                context.CuentasHostel.Add(hostel);
+                
+                await context.SaveChangesAsync();
+
+                return hostel;
             }
-            else
-                return NotFound();
+            catch (Exception)
+            {
+
+                return BadRequest("no se pudo crear la nueva cuenta intente nuevamente ");
+            }
         }
 
         
@@ -96,44 +99,51 @@ namespace SoyViajero.Server.Controllers
         [HttpPost("/AgregarViajero")]
         public async Task<ActionResult<CuentaHostel>> post(CuentaViajero viajero)
         {
-            if (!UserExist(viajero.UsuarioId))
+
+            int IdUser = int.Parse(User.Claims
+                            .Where(x => x.Type == "Id")
+                            .Select(c => c.Value)
+                            .First());
+
+            var cuentaV = context.CuentasViajeros
+                .Where(c => c.UsuarioId == IdUser)
+                .Select(x => x.Id)
+                .FirstOrDefault();
+
+            if (cuentaV != null)
+                return BadRequest("No se puede agregar otra cuenta de 'Viajero', pero puedes modificar los datos de la que ya tienes ");
+
+            try
             {
+                viajero.UsuarioId = IdUser;
+                viajero.Id = IdCuentaV();
 
-                var cuentaV = context.CuentasViajeros
-                    .Where(c => c.UsuarioId == viajero.UsuarioId)
-                    .Select(x => x.Id)
-                    .FirstOrDefault();
-
-                if (cuentaV!=null)
-                    return BadRequest("No se puede agregar otra cuenta de 'Viajero', pero puedes modificar los datos de la que ya tienes ");
-                try
-                {
-                    viajero.Id = IdCuentaV();
-
-                    context.CuentasViajeros.Add(viajero);
-                    await context.SaveChangesAsync();
-                    return Ok();
-                }
-                catch (Exception e)
-                {
-                    return BadRequest("Error al Guardar el nuevo hostel " + e);
-                }
+                context.CuentasViajeros.Add(viajero);
+                await context.SaveChangesAsync();
+                return Ok();
             }
-            else
-                return NotFound();
+            catch (Exception e)
+            {
+                return BadRequest("Error al Guardar el nuevo hostel " + e);
+            }
         }
 
         #endregion
 
         #region Delete
         [HttpDelete("/eliminarCuentaViajero")]
-        public async Task<ActionResult> delete(int idUser)
+        public async Task<ActionResult> delete()
         {
-            if (UserExist(idUser))
-                return  NotFound("Error, intente nuevamente");
+            var CuentaViajero = User.Claims
+                            .Where(x => x.Type == "cuentaV")
+                            .Select(c => c.Value)
+                            .FirstOrDefault();
+
+            if (CuentaViajero == null)
+                return BadRequest("No posee ninguna cuenta de viajero");
 
             var viajeroElim = context.CuentasViajeros
-                .Where(c => c.UsuarioId == idUser)
+                .Where(c => c.Id.Equals(CuentaViajero))
                 .FirstOrDefault();
 
             if (viajeroElim == null) 
@@ -171,7 +181,7 @@ namespace SoyViajero.Server.Controllers
         }
       
 
-        private string IdCuentaH() // generan ids aleatorios con identificador segun el tipo de cuenta
+        private string crearIdH() // generan ids aleatorios con identificador segun el tipo de cuenta
         {
             Random random = new Random();
             int numero;
@@ -241,6 +251,8 @@ namespace SoyViajero.Server.Controllers
             }
             return sb.ToString();
         }
+        
+        
         #endregion
     }
 }

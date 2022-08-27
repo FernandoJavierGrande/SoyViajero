@@ -19,8 +19,8 @@ namespace SoyViajero.BBDD.Data.Entidades
         public string Apellido { get; set; }
         public int UsuarioId { get; set; }
 
-
         #endregion
+
         public List<Publicacion> publicacionesV { get; set; }
         public List<Comentario> comentariosV{ get; set; }
     }

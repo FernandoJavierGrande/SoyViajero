@@ -5,6 +5,11 @@ using System.Text;
 using Microsoft.EntityFrameworkCore;
 using SoyViajero.BBDD.Data;
 
+
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using System.Security.Claims;
+
 namespace SoyViajero.Server.Controllers
 {
     [ApiController]
@@ -16,36 +21,74 @@ namespace SoyViajero.Server.Controllers
         public  LoginController(Context context) => this.context = context;
 
 
-
-
-        #region get
-        [HttpGet]
-        public async Task<ActionResult<int>> Get(string usuario,string pass)
+        #region post
+        [HttpPost("{usuario},{pass}")]
+        public async Task<ActionResult> postLog(string usuario,string pass)
         {
+            try
             {
-                int IdUser;
-                try
+                pass = ConvertirSha256(pass);
+
+                var IdUser = context.Usuarios
+                    .Where(x => x.NombreUser == usuario && x.Pass == pass)
+                    .Select(u => u.Id)
+                    .FirstOrDefault();
+
+                if (IdUser == 0)
+                    throw new Exception();
+
+                var cuentasH = await context.CuentasHostel
+                    .Where(c => c.UsuarioId == IdUser)
+                    .Select(x =>x.Id)
+                    .ToListAsync();
+                
+                var cuentasV = context.CuentasViajeros
+                    .Where(c=>c.UsuarioId==IdUser)
+                    .Select(x =>x.Id)
+                    .FirstOrDefault();
+
+                var claims = new List<Claim> 
                 {
-                    pass = ConvertirSha256(pass);
+                    new Claim(ClaimTypes.Name, usuario),
+                    new Claim("Id", IdUser.ToString()),
+                };
 
-                    IdUser = (from u in context.Usuarios where u.NombreUser == usuario && u.Pass == pass select u).First().Id;
+                if (cuentasV!=null)
+                    claims.Add(new Claim("cuentaV", cuentasV));
 
 
-
-                }
-                catch (Exception)
+                for (int i = 0; i < cuentasH.Count; i++)
                 {
 
-                    return BadRequest("El usuario o contraseña no son correctos");
+                    claims.Add(new Claim($"cuentaH{i}", cuentasH[i]));
+                    if (i==0) // asigna automaticamente la primer cuenta
+                    {
+                        claims.Add(new Claim("cuentaActiva",cuentasH[i]));
+                    }
                 }
 
-                return IdUser;
+                foreach (var item in claims)
+                    Console.WriteLine($"+++++++{item.Type} = {item.Value}");
+                
+
+                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+
+                await HttpContext.SignInAsync
+                    (CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(claimsIdentity));
+
+                return Ok($"id user {IdUser}");
+            }
+            catch (Exception e)
+            {
+                return BadRequest("El usuario o contraseña no son correctos " + e);
             }
         }
-            #endregion
+        
 
-            #region post
-            [HttpPost]
+        
+        [HttpPost("/Registro")]
         public ActionResult Registro(Usuario usuario)
         {
             usuario.Pass = ConvertirSha256(usuario.Pass);
@@ -77,16 +120,17 @@ namespace SoyViajero.Server.Controllers
             {
                 Encoding enc = Encoding.UTF8;
                 byte[] result = hash.ComputeHash(enc.GetBytes(texto));
+
                 foreach (byte b in result)
-                {
                     sb.Append(b.ToString("x2"));
-                }
             }
             return sb.ToString();
         }
         private bool UserExist(string userName) //confirma si el usuario con nombre x existe
         {
-            var user = context.Usuarios.Where(u => u.NombreUser == userName).FirstOrDefault();
+            var user = context.Usuarios
+                .Where(u => u.NombreUser == userName)
+                .FirstOrDefault();
             if (user != null)
                 return false;
             return true;
