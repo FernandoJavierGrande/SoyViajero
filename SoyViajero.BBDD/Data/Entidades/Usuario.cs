@@ -14,7 +14,7 @@ namespace SoyViajero.BBDD.Data.Entidades
 
         public int Id { get; set; }
         [Required(ErrorMessage ="El nombre de usuario es obligatorio")]
-        [MinLength(8, ErrorMessage = "El usuario no puede tener menos de {1} caracteres")]
+        [MinLength(2, ErrorMessage = "El usuario no puede tener menos de {1} caracteres")]
         public string NombreUser { get; set; }
         [Required(ErrorMessage ="La cuenta del mail es obligatoia")]
         public string Mail { get; set; }

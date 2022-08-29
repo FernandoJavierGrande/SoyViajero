@@ -3,9 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using SoyViajero.BBDD.Data;
 using SoyViajero.BBDD.Data.Entidades;
 
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace SoyViajero.Server.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/Comentario")]
     public class ComentarioController : ControllerBase
@@ -22,12 +25,41 @@ namespace SoyViajero.Server.Controllers
         [HttpGet("{id:int}")]
         public async Task<ActionResult<Comentario>> Get(int id)
         {
-            var comentario = await context.Comentarios.Where(x => x.ID == id).FirstOrDefaultAsync();
-            if (comentario == null)
+            try
             {
-                return NotFound($"No existe un comentario de ID={id}");
+                var cuentaActiva = Convert.ToString(User.Claims.Where(x => x.Type == "cuentaActiva").Select(c => c.Value).First());
+
+                var comentario = await context.Comentarios.Where(x => x.ID == id).FirstOrDefaultAsync();
+                //if (comentario == null)
+                //{
+                //    return NotFound($"No existe un comentario de ID={id}");
+                //}
+                return comentario;
             }
-            return comentario;
+            catch (Exception e)
+            {
+
+                return BadRequest(e);
+            }
+        }
+
+
+        [HttpGet("/Comentarios")]
+        public async Task<ActionResult<List<Comentario>>> Get()
+        {
+            try
+            {
+                var cuentaActiva = User.Claims.Where(x => x.Type == "cuentaActiva").Select(c => c.Value).First();
+                var comentarios = await context.Comentarios
+                        .Where(x => x.CuentasId == cuentaActiva)
+                        .ToListAsync();
+                return comentarios;
+            }
+            catch (Exception e)
+            {
+
+                return BadRequest(e);
+            }
         }
         #endregion
 
