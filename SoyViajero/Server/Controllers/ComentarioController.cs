@@ -69,6 +69,8 @@ namespace SoyViajero.Server.Controllers
         {
             try
             {
+                coment.CuentasId = User.Claims.Where(x => x.Type == "cuentaActiva").Select(c => c.Value).First();
+
                 context.Comentarios.Add(coment);
                 await context.SaveChangesAsync();
                 return coment.ID;
