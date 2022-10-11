@@ -165,22 +165,6 @@ namespace SoyViajero.Server.Controllers
 
         #region metodos
 
-        private bool UserExist(string userName) //confirma si el usuario con nombre x existe
-        {
-            var user = context.Usuarios.Where(u => u.NombreUser == userName).FirstOrDefault();
-            if (user != null)
-                return false;
-            return true;
-        }
-        private bool UserExist(int userId) // cpnfirma si existe un usuario por medio del id
-        {
-            var user = context.Usuarios.Where(u => u.Id == userId).FirstOrDefault();
-            if (user != null)
-                return false;
-            return true;
-        }
-      
-
         private string crearIdH() // generan ids aleatorios con identificador segun el tipo de cuenta
         {
             Random random = new Random();

@@ -97,7 +97,8 @@ namespace SoyViajero.Server.Controllers
 
             try
             {
-                if (!UserExist(usuario.NombreUser))
+                var UserExists = context.Usuarios.Any(x => x.NombreUser == usuario.NombreUser);
+                if (UserExists)
                 {
                     return BadRequest($"El nombre de usuario '{usuario.NombreUser}' ya existe.");
                 }
@@ -128,14 +129,14 @@ namespace SoyViajero.Server.Controllers
             }
             return sb.ToString();
         }
-        private bool UserExist(string userName) //confirma si el usuario con nombre x existe
-        {
-            var user = context.Usuarios
-                .Where(u => u.NombreUser == userName)
-                .FirstOrDefault();
-            if (user != null)
-                return false;
-            return true;
-        }
+        //private bool UserExist(string userName) //confirma si el usuario con nombre x existe
+        //{
+        //    var user = context.Usuarios
+        //        .Where(u => u.NombreUser == userName)
+        //        .FirstOrDefault();
+        //    if (user != null)
+        //        return false;
+        //    return true;
+        //}
     }
 }

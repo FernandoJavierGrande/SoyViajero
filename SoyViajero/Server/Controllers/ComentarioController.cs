@@ -42,7 +42,7 @@ namespace SoyViajero.Server.Controllers
                 return BadRequest(e);
             }
         }
-
+            
 
         [HttpGet("/Comentarios")]
         public async Task<ActionResult<List<Comentario>>> Get()
