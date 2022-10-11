@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoyViajero.Server", "SoyViajero\Server\SoyViajero.Server.csproj", "{6E0D8476-BF2C-4E67-ABA6-00F8036666F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoyViajero.Server", "SoyViajero\Server\SoyViajero.Server.csproj", "{6E0D8476-BF2C-4E67-ABA6-00F8036666F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoyViajero.Client", "SoyViajero\Client\SoyViajero.Client.csproj", "{25BE9EB1-361D-4D8E-8F6F-7B0F9ED5201A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoyViajero.Client", "SoyViajero\Client\SoyViajero.Client.csproj", "{25BE9EB1-361D-4D8E-8F6F-7B0F9ED5201A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoyViajero.Shared", "SoyViajero\Shared\SoyViajero.Shared.csproj", "{8F9D285F-E449-442C-99F5-75B535F37629}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoyViajero.Shared", "SoyViajero\Shared\SoyViajero.Shared.csproj", "{8F9D285F-E449-442C-99F5-75B535F37629}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoyViajero.BBDD", "SoyViajero.BBDD\SoyViajero.BBDD.csproj", "{81D65168-BB65-4581-8129-C423ACD74A4C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoyViajero.BBDD", "SoyViajero.BBDD\SoyViajero.BBDD.csproj", "{81D65168-BB65-4581-8129-C423ACD74A4C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

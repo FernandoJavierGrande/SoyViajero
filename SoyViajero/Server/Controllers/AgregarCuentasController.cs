@@ -124,7 +124,7 @@ namespace SoyViajero.Server.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest("Error al Guardar el nuevo hostel " + e);
+                return BadRequest("Error al Guardar el nuevo viajero " + e);
             }
         }
 

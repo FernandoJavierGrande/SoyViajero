@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\SoyViajero.BBDD\SoyViajero.BBDD.csproj" />
     <ProjectReference Include="..\Shared\SoyViajero.Shared.csproj" />
   </ItemGroup>
 
