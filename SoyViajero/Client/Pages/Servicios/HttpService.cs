@@ -26,6 +26,28 @@ namespace SoyViajero.Client.Pages.Servicios
             }
         }
 
+        #region post
+
+        
+        public async Task<HttpRespuesta<object>> Post<T>(string url, T enviar)
+        {
+            try
+            {
+                var enviarJson = JsonSerializer.Serialize(enviar); 
+                var enviarContent = new StringContent(enviarJson, Encoding.UTF8, "application/json");
+
+                var respuesta = await http.PostAsync(url, enviarContent);
+
+
+                return new HttpRespuesta<object>(null, !respuesta.IsSuccessStatusCode, respuesta);
+            }
+            catch (Exception )
+            {
+                throw;
+            }
+        }
+        #endregion
+
         private async Task<T> DeserializarRespuesta<T>(HttpResponseMessage response)
         {
             var respuestaStr = await response.Content.ReadAsStringAsync();
