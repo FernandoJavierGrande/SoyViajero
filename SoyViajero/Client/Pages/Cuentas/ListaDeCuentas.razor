@@ -1,0 +1,75 @@
+﻿@page "/Cuentas"
+@inject IHttpService http
+
+
+<h3>Lista De Cuentas</h3>
+
+<table class="table table-hover  table-sm">
+    <thead>
+        <tr>
+            <th scope="col">Nombre</th>
+            <th scope="col">Tipo de cuenta</th> 
+            <th scope="col"> </th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (cuentasH == null && cuentaV ==null)
+        {
+            <tr>Cargando</tr>
+        }
+        else if (cuentasH.Count == 0 && cuentaV == null)
+        {
+            <tr>No hay datos disponibles</tr>
+        }
+        else
+        {
+            <tr>
+                <td>@cuentaV.Nombre @cuentaV.Apellido</td>
+                <td>Viajero</td>
+                <button class ="btn btn-dark" type="submit" >Ingresar</button>
+            </tr>
+
+            @foreach (var item in cuentasH)
+            {
+                <tr>
+                    <td>@item.Nombre</td>
+                    <td>Hostel</td>
+                    <button class ="btn btn-primary" type="submit">Ingresar</button>
+                </tr>
+            }
+        }
+    </tbody>
+    
+    </table>
+
+@code {
+    List<CuentaHostel> cuentasH = new List<CuentaHostel>();
+    CuentaViajero  cuentaV = new CuentaViajero();
+    Usuario usuario = new Usuario();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        await readCuentas();
+
+    }
+    private async Task readCuentas()
+    {
+        var respuesta = await http.Get<Usuario>("api/Cuentas");
+        if (!respuesta.Error)
+        {
+            if (respuesta.Respuesta.cuentasHostel.Count>0)
+            {
+                cuentasH = respuesta.Respuesta.cuentasHostel;
+            }
+            if (respuesta.Respuesta.cuentaViajero!=null)
+            {
+                cuentaV = respuesta.Respuesta.cuentaViajero;
+            }
+
+        }
+    }
+
+
+}
