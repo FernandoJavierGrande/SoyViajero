@@ -1,0 +1,27 @@
+﻿@page "/Cuentas/CrearViajero"
+@inject IHttpService http
+@inject NavigationManager navigationManager
+
+<h3>Crear</h3>
+<FormCuentaViajero cuentaViajero = "cuentaViajero" onCancel="Cancelar" onValidSubmit="Grabar"/>
+
+
+
+
+@code {
+    private CuentaViajero cuentaViajero = new CuentaViajero();
+    private async void Grabar()
+    {
+        var httpRespuesta = await http.Post<CuentaViajero>("api/Cuentas", cuentaViajero);
+        if (httpRespuesta.Error)
+        {
+            var body = httpRespuesta.HttpResponseMessage;
+        }
+        navigationManager.NavigateTo("/Cuentas");
+    }
+    private void Cancelar()
+    {
+        navigationManager.NavigateTo("/Cuentas");
+
+    }
+}
