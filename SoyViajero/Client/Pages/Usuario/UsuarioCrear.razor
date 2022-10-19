@@ -1,0 +1,27 @@
+﻿@page "/Usuario/Crear"
+@inject IHttpService http
+@inject NavigationManager navigationManager
+
+<h3>Crear</h3>
+<FormUsuario usuario = "usuario" onCancel="Cancelar" onValidSubmit="Grabar"/>
+
+
+
+
+@code {
+    private Usuario usuario = new ();
+    private async void Grabar()
+    {
+        var httpRespuesta = await http.Post<Usuario>("api/Usuario", usuario); /*(no se si api/usuario esta bien)*/
+        if (httpRespuesta.Error)
+        {
+            var body = httpRespuesta.HttpResponseMessage;
+        }
+        navigationManager.NavigateTo("/Cuentas");
+    }
+    private void Cancelar()
+    {
+        navigationManager.NavigateTo("/Cuentas");
+
+    }
+}
