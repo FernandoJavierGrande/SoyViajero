@@ -3,18 +3,21 @@
 @inject NavigationManager navigationManager
 
 <h3>Crear</h3>
-<FormCuentasHostel cuentaHostel = "cuentaHostel" onCancel="Cancelar" onValidSubmit="Grabar"/>
+<FormCuentasHostel cuentaHostel="cuentaHostel" onCancel="Cancelar" onValidSubmit="Grabar"/>
 
 
 
 
 @code {
     private CuentaHostel cuentaHostel = new CuentaHostel();
+
     private async void Grabar()
     {
-        var httpRespuesta = await http.Post<CuentaHostel>("api/Cuentas", cuentaHostel); /*(no se si api/cuentas esta bien)*/
+        
+        var httpRespuesta = await http.Post<CuentaHostel>("/AgregarHostel", cuentaHostel); /*(no se si api/cuentas esta bien)*/
         if (httpRespuesta.Error)
         {
+            
             var body = httpRespuesta.HttpResponseMessage;
         }
         navigationManager.NavigateTo("/Cuentas");

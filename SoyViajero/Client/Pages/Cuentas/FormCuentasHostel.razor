@@ -57,18 +57,32 @@
         <div class="form-group">
             <label>Teléfono</label>
             <div>
-                <InputNumber class="form-control" @bind-Value="@cuentaHostel.Telefono"/>
+                <InputNumber class="form-control" @bind-Value="@cuentaHostel.Telefono"/>  @*cambiar a texto en bbdd*@
                 <ValidationMessage For="@(() => cuentaHostel.Telefono)"/>
 
             </div>
     </div>
+    <div class="form-group">
+            <label>Mail</label>
+            <div>
+                <InputText class="form-control" @bind-Value="@cuentaHostel.Mail"/>
+                <ValidationMessage For="@(() => cuentaHostel.Mail)"/>
 
-    <button class="btn btn-primary" type="submit">Aceptar</button>
+            </div>
+    </div>
+
+    <button class="btn btn-primary" type="submit">Crear</button>
     <button class="btn btn-secondary" @onclick="onCancel">Cancelar</button>
 </EditForm>
 
 @code {
+
     [Parameter] public CuentaHostel cuentaHostel { get; set; }
     [Parameter] public EventCallback onValidSubmit { get; set; }
-    [Parameter] public EventCallback onCancel { get; set; }
+    [Parameter] public EventCallback onCancel { get; set; } 
+    protected override async Task OnInitializedAsync()
+    {
+        cuentaHostel.Activo = true;
+
+    }
 }

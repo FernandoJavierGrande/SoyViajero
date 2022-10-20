@@ -75,7 +75,7 @@ namespace SoyViajero.Server.Controllers
 
 
         [HttpPost("/AgregarHostel")]
-        public async Task<ActionResult<CuentaHostel>>post(CuentaHostel hostel) // agrega una nueva cuenta de hostel
+        public async Task<ActionResult<CuentaHostel>>Post(CuentaHostel hostel) // agrega una nueva cuenta de hostel
         {
             try
             {
@@ -90,8 +90,8 @@ namespace SoyViajero.Server.Controllers
             }
             catch (Exception)
             {
-
-                return BadRequest("no se pudo crear la nueva cuenta intente nuevamente ");
+                
+                return BadRequest("no se pudo crear la nueva cuenta intente nuevamente " );
             }
         }
 
