@@ -8,6 +8,7 @@
 
             </div>
     </div>
+    
 
     <button class="btn btn-primary" type="submit">Aceptar</button>
     <button class="btn btn-secondary" @onclick="onCancel">Cancelar</button>
@@ -17,4 +18,14 @@
     [Parameter] public Publicacion publicacion { get; set; }
     [Parameter] public EventCallback onValidSubmit { get; set; }
     [Parameter] public EventCallback onCancel { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        base.OnInitializedAsync();
+
+        publicacion.CuentasId = "0";
+        publicacion.ID = 0;
+    }
+
+
 }

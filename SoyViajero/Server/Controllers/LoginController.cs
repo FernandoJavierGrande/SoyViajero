@@ -51,20 +51,25 @@ namespace SoyViajero.Server.Controllers
                 {
                     new Claim(ClaimTypes.Name, usuario),
                     new Claim("Id", IdUser.ToString()),
-                };
+                    
+            };
 
-                if (cuentasV!=null)
+                if (cuentasV != null)
+                {
                     claims.Add(new Claim("cuentaV", cuentasV)); // guarda id de viajero
+                    claims.Add(new Claim("cuentaActiva", cuentasV));
+                }
+                    
 
 
                 for (int i = 0; i < cuentasH.Count; i++)       // por cada cuentaH guarda el id en un nuevo claim
                 {
 
                     claims.Add(new Claim($"cuentaH{i}", cuentasH[i]));
-                    if (i==0) // asigna automaticamente la primer cuenta
-                    {
-                        claims.Add(new Claim("cuentaActiva",cuentasH[i]));
-                    }
+                    //if (i==0) // asigna automaticamente la primer cuenta
+                    //{
+                    //    claims.Add(new Claim("cuentaActiva",cuentasV));
+                    //}
                 }
 
                 foreach (var item in claims)    //prueba

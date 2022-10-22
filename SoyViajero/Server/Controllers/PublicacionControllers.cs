@@ -63,18 +63,23 @@ namespace SoyViajero.Server.Controllers
                 var cuentaActivaId = User.Claims.Where(c => c.Type == "cuentaActiva").Select(x => x.Value).FirstOrDefault();
 
                 if (cuentaActivaId == null)
+                {
+                    Console.WriteLine($"error en cuentaActiva {cuentaActivaId}");
                     return NotFound("No se puede realizar la publicacion");
+                }
+                    
 
                 /*usa la cuenta h o v activa para realizar la publicacion bajo esa cuenta*/
                 publicacion.CuentasId = cuentaActivaId;
-
+                publicacion.FechaCreacion = DateTime.Now;
 
                 context.Publicaciones.Add(publicacion);
                 await context.SaveChangesAsync();
                 return publicacion.ID;
             }
-            catch (Exception e)
+            catch (Exception e) //cambiar
             {
+                Console.WriteLine($"error en el servidor {e}");
                 return BadRequest(e.Message);
             }
         }

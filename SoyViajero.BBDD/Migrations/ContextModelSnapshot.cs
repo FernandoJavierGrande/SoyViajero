@@ -30,12 +30,6 @@ namespace SoyViajero.BBDD.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
-                    b.Property<string>("CuentaHostelId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("CuentaViajeroId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("CuentasId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -52,10 +46,6 @@ namespace SoyViajero.BBDD.Migrations
                         .HasColumnType("nvarchar(300)");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("CuentaHostelId");
-
-                    b.HasIndex("CuentaViajeroId");
 
                     b.HasIndex("PublicacionId");
 
@@ -158,30 +148,6 @@ namespace SoyViajero.BBDD.Migrations
                     b.ToTable("CuentasViajeros");
                 });
 
-            modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.fotos_publicacion", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
-
-                    b.Property<DateTime>("FechaCreacion")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Foto")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("PublicacionId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("PublicacionId");
-
-                    b.ToTable("fotos_publicaciones");
-                });
-
             modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.Publicacion", b =>
                 {
                     b.Property<int>("ID")
@@ -202,17 +168,10 @@ namespace SoyViajero.BBDD.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("cuentaHostelId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("cuentaViajeroId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("fotoPublicacion")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("cuentaHostelId");
-
-                    b.HasIndex("cuentaViajeroId");
 
                     b.ToTable("Publicaciones");
                 });
@@ -250,14 +209,6 @@ namespace SoyViajero.BBDD.Migrations
 
             modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.Comentario", b =>
                 {
-                    b.HasOne("SoyViajero.BBDD.Data.Entidades.CuentaHostel", null)
-                        .WithMany("comentariosH")
-                        .HasForeignKey("CuentaHostelId");
-
-                    b.HasOne("SoyViajero.BBDD.Data.Entidades.CuentaViajero", null)
-                        .WithMany("comentariosV")
-                        .HasForeignKey("CuentaViajeroId");
-
                     b.HasOne("SoyViajero.BBDD.Data.Entidades.Publicacion", null)
                         .WithMany("Comentarios")
                         .HasForeignKey("PublicacionId")
@@ -283,51 +234,9 @@ namespace SoyViajero.BBDD.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.fotos_publicacion", b =>
-                {
-                    b.HasOne("SoyViajero.BBDD.Data.Entidades.Publicacion", "Publicaciones")
-                        .WithMany("fotos_publicaciones")
-                        .HasForeignKey("PublicacionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Publicaciones");
-                });
-
-            modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.Publicacion", b =>
-                {
-                    b.HasOne("SoyViajero.BBDD.Data.Entidades.CuentaHostel", "cuentaHostel")
-                        .WithMany("publicacionesH")
-                        .HasForeignKey("cuentaHostelId");
-
-                    b.HasOne("SoyViajero.BBDD.Data.Entidades.CuentaViajero", "cuentaViajero")
-                        .WithMany("publicacionesV")
-                        .HasForeignKey("cuentaViajeroId");
-
-                    b.Navigation("cuentaHostel");
-
-                    b.Navigation("cuentaViajero");
-                });
-
-            modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.CuentaHostel", b =>
-                {
-                    b.Navigation("comentariosH");
-
-                    b.Navigation("publicacionesH");
-                });
-
-            modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.CuentaViajero", b =>
-                {
-                    b.Navigation("comentariosV");
-
-                    b.Navigation("publicacionesV");
-                });
-
             modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.Publicacion", b =>
                 {
                     b.Navigation("Comentarios");
-
-                    b.Navigation("fotos_publicaciones");
                 });
 
             modelBuilder.Entity("SoyViajero.BBDD.Data.Entidades.Usuario", b =>

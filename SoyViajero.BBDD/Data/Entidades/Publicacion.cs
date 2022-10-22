@@ -17,18 +17,19 @@ namespace SoyViajero.BBDD.Data.Entidades
 
         //CuentasId
 
-        [ForeignKey("CuentaHostel")]
+        //[ForeignKey("CuentaHostel")]
         
         [Required(ErrorMessage = "Cuenta es obligatorio")]
         public string CuentasId { get; set; }
 
+        public string fotoPublicacion { get; set; }
 
-        public CuentaHostel cuentaHostel;
-        public CuentaViajero cuentaViajero;
+        //public CuentaHostel cuentaHostel;
+        //public CuentaViajero cuentaViajero;
 
 
         public List<Comentario> Comentarios { get; set; }
-        public List<fotos_publicacion> fotos_publicaciones { get; set; }
+        //public List<fotos_publicacion> fotos_publicaciones { get; set; }
     }
 }
 

@@ -12,7 +12,8 @@
     private Publicacion publicacion = new Publicacion();
     private async void Grabar()
     {
-        var httpRespuesta = await http.Post<Publicacion>("api/Publicaciones", publicacion); /*(no se si api/cuentas esta bien)*/
+        Console.WriteLine("entro al grabar");
+        var httpRespuesta = await http.Post<Publicacion>("api/Publicacion", publicacion); 
         if (httpRespuesta.Error)
         {
             var body = httpRespuesta.HttpResponseMessage;

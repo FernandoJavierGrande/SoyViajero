@@ -21,7 +21,7 @@ namespace SoyViajero.BBDD.Data.Entidades
 
         #endregion
 
-        public List<Publicacion> publicacionesV { get; set; }
-        public List<Comentario> comentariosV{ get; set; }
+        //public List<Publicacion> publicacionesV { get; set; }
+        //public List<Comentario> comentariosV{ get; set; }
     }
 }
