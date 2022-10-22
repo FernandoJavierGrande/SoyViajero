@@ -25,11 +25,15 @@
         }
         else
         {
-            <tr>
-                <td>@cuentaV.Nombre @cuentaV.Apellido</td>
-                <td>Viajero</td>
-                <button class ="btn btn-dark" type="submit" >Ingresar</button>
-            </tr>
+            @if (cuentaV!=null)
+            {
+                <tr>
+                    <td>@cuentaV.Nombre @cuentaV.Apellido</td>
+                    <td>Viajero</td>
+                    <button class ="btn btn-dark" type="submit" >Ingresar</button>
+                </tr>
+            }
+           
 
             @foreach (var item in cuentasH)
             {
@@ -44,10 +48,13 @@
     
     </table>
 
+
 @code {
     List<CuentaHostel> cuentasH = new List<CuentaHostel>();
     CuentaViajero  cuentaV = new CuentaViajero();
     Usuario usuario = new Usuario();
+
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -65,13 +72,11 @@
             {
                 cuentasH = respuesta.Respuesta.cuentasHostel;
             }
-            if (respuesta.Respuesta.cuentaViajero!=null)
-            {
-                cuentaV = respuesta.Respuesta.cuentaViajero;
-            }
-
+            cuentaV = respuesta.Respuesta.cuentaViajero; 
+               
         }
     }
 
 
 }
+

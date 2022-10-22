@@ -97,7 +97,7 @@ namespace SoyViajero.Server.Controllers
 
 
         [HttpPost("/AgregarViajero")]
-        public async Task<ActionResult<CuentaHostel>> post(CuentaViajero viajero)
+        public async Task<ActionResult<CuentaHostel>> Post(CuentaViajero viajero)
         {
 
             int IdUser = int.Parse(User.Claims
@@ -111,7 +111,7 @@ namespace SoyViajero.Server.Controllers
                 .FirstOrDefault();
 
             if (cuentaV != null)
-                return BadRequest("No se puede agregar otra cuenta de 'Viajero', pero puedes modificar los datos de la que ya tienes ");
+                return BadRequest("No se puede agregar otra cuenta de 'Viajero'");
 
             try
             {

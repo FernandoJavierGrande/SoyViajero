@@ -107,8 +107,9 @@ namespace SoyViajero.Server.Controllers
                 context.SaveChangesAsync();
                 return Ok();
             }
-            catch (Exception)
+            catch (Exception )
             {
+                
                 return BadRequest("Error, vuelva a intentar");
             }
         }

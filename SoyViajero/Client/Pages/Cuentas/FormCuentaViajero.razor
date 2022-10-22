@@ -72,6 +72,14 @@
 
             </div>
     </div>
+    <div class="form-group">
+            <label>Mail</label>
+            <div>
+                <InputText class="form-control" @bind-Value="@cuentaViajero.Mail"/>
+                <ValidationMessage For="@(() => cuentaViajero.Mail)"/>
+
+            </div>
+    </div>
     
 
     <button class="btn btn-primary" type="submit">Aceptar</button>

@@ -10,7 +10,7 @@ namespace SoyViajero.Server.Controllers
 {
     [ApiController]
     [Route("api/Publicacion")]
-    [Authorize]
+    //[Authorize]
     public class PublicacionController : ControllerBase
     {
         private readonly Context context;

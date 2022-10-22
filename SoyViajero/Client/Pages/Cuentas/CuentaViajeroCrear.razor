@@ -6,13 +6,11 @@
 <FormCuentaViajero cuentaViajero = "cuentaViajero" onCancel="Cancelar" onValidSubmit="Grabar"/>
 
 
-
-
 @code {
     private CuentaViajero cuentaViajero = new CuentaViajero();
     private async void Grabar()
     {
-        var httpRespuesta = await http.Post<CuentaViajero>("api/Cuentas", cuentaViajero);
+        var httpRespuesta = await http.Post<CuentaViajero>("/AgregarViajero", cuentaViajero);
         if (httpRespuesta.Error)
         {
             var body = httpRespuesta.HttpResponseMessage;
