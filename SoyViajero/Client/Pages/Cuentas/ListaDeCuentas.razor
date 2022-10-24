@@ -1,5 +1,6 @@
 ﻿@page "/Cuentas"
 @inject IHttpService http
+@inject NavigationManager navigationManager
 
 
 <h3>Lista De Cuentas</h3>
@@ -30,7 +31,8 @@
                 <tr>
                     <td>@cuentaV.Nombre @cuentaV.Apellido</td>
                     <td>Viajero</td>
-                    <button class ="btn btn-dark" type="submit" >Ingresar</button>
+                    <td>@cuentaV.Id</td>
+                    <button class ="btn btn-dark" @onclick="()=>logCuenta(cuentaV.Id)">Ingresar</button>
                 </tr>
             }
            
@@ -40,7 +42,8 @@
                 <tr>
                     <td>@item.Nombre</td>
                     <td>Hostel</td>
-                    <button class ="btn btn-primary" type="submit">Ingresar</button>
+                    <td>@item.Id</td>0+
+                    <button class ="btn btn-secondary" @onclick="()=>logCuenta(item.Id)">Ingresar</button>
                 </tr>
             }
         }
@@ -73,8 +76,24 @@
                 cuentasH = respuesta.Respuesta.cuentasHostel;
             }
             cuentaV = respuesta.Respuesta.cuentaViajero; 
-               
+
         }
+    }
+    private async Task logCuenta(string Id)
+    {
+        Console.WriteLine($"id = {Id}");
+        var respuesta = await http.Post($"/cambiarCuenta", Id);
+        if (!respuesta.Error)
+        {
+           
+            navigationManager.NavigateTo("/SeleccionCuenta");
+        }
+        else
+        {
+            Console.WriteLine("respuesta "+respuesta.Respuesta);
+            navigationManager.NavigateTo("/Muro");
+        }
+
     }
 
 

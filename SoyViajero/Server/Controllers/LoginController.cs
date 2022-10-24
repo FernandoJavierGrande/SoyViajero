@@ -9,6 +9,7 @@ using SoyViajero.BBDD.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SoyViajero.Server.Controllers
 {
@@ -17,9 +18,10 @@ namespace SoyViajero.Server.Controllers
     public class LoginController : ControllerBase
     {
         private readonly Context context;
-
+        
+        //private List<Claim> claims = new List<Claim>();
         public  LoginController(Context context) => this.context = context;
-
+        
 
         #region post
         [HttpPost("{usuario},{pass}")]
@@ -42,67 +44,159 @@ namespace SoyViajero.Server.Controllers
                     .Select(x =>x.Id)
                     .ToListAsync();
                 
-                var cuentasV = context.CuentasViajeros // selecciona si tiene la cuenta de viajero
+                var cuentasV = await context.CuentasViajeros // selecciona si tiene la cuenta de viajero
                     .Where(c=>c.UsuarioId==IdUser)
                     .Select(x =>x.Id)
-                    .FirstOrDefault();
+                    .FirstAsync();
 
-                var claims = new List<Claim> //guarda los datos de la sesion 
-                {
-                    new Claim(ClaimTypes.Name, usuario),
-                    new Claim("Id", IdUser.ToString()),
-                    
-            };
-
-                if (cuentasV != null)
-                {
-                    claims.Add(new Claim("cuentaV", cuentasV)); // guarda id de viajero
-                    claims.Add(new Claim("cuentaActiva", cuentasV));
-                }
-                    
+                bool resp = await agregarClaims(IdUser,cuentasH,cuentasV,usuario);
 
 
-                for (int i = 0; i < cuentasH.Count; i++)       // por cada cuentaH guarda el id en un nuevo claim
-                {
-
-                    claims.Add(new Claim($"cuentaH{i}", cuentasH[i]));
-                    //if (i==0) // asigna automaticamente la primer cuenta
-                    //{
-                    //    claims.Add(new Claim("cuentaActiva",cuentasV));
-                    //}
-                }
-
-                foreach (var item in claims)    //prueba
-                    Console.WriteLine($"+++++++{item.Type} = {item.Value}");
-                
-
-                // finaliza el guardado de los datos de la sesion
-
-                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                #region borrar
 
 
-                await HttpContext.SignInAsync
-                    (CookieAuthenticationDefaults.AuthenticationScheme,
-                    new ClaimsPrincipal(claimsIdentity));
+                ////guarda los datos de la sesion 
+                // var claims = new List<Claim> 
+                // {
+                //    new Claim(ClaimTypes.Name, usuario),
+                //    new Claim("Id", IdUser.ToString()),
+
+                // };
+
+                //if (cuentasV != null)
+                //{
+                //    claims.Add(new Claim("cuentaV", cuentasV)); // guarda id de viajero
+                //    //claims.Add(new Claim("cuentaActiva", cuentasV)); eliminar
+                //}
+
+
+
+                //for (int i = 0; i < cuentasH.Count; i++)       // por cada cuentaH guarda el id en un nuevo claim
+                //{
+
+                //    claims.Add(new Claim($"cuentaH{i}", cuentasH[i]));
+
+                //}
+
+                //
+
+                //foreach (var item in claims)    //prueba
+                //    Console.WriteLine($"+++++++{item.Type} = {item.Value}");
+
+
+                //finaliza el guardado de los datos de la sesion
+
+                //var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+
+                // await HttpContext.SignInAsync
+                //     (CookieAuthenticationDefaults.AuthenticationScheme,
+                //     new ClaimsPrincipal(claimsIdentity));
+                #endregion
 
                 return Ok($"id user {IdUser}");
+                
+
             }
             catch (Exception )
             {
                 return BadRequest("El usuario o contraseña no son correctos ");
             }
         }
-        
 
-        
+        #region cambiarCuenta
+        [Authorize]
+        [HttpPost("/cambiarCuenta")]
+        public async Task<ActionResult> Post(string cuentaId)
+        {
+            //comparar si el id de la cuenta existe entre los claims cargados
+
+            bool validarCuenta = false;
+            
+            var claims =  User.Claims.ToList();
+            
+            for (int i = 0; i < claims.Count; i++)
+            {
+                string aux = claims[i].Value.ToString();
+                
+                if (aux==cuentaId)
+                {
+                    validarCuenta = true;
+                    
+                }
+                if (claims[i].Type.Contains("cuentaActiva"))
+                {
+                    claims.Remove(claims[i]);
+                    validarCuenta=true;
+                }
+
+            }
+            
+
+            Console.WriteLine($"valor de validar cuenta2 {validarCuenta}");
+            if (!validarCuenta)
+                return BadRequest("Error");
+
+            #region eli
+
+            //Console.WriteLine("antes del try");
+
+
+            //try
+            //{
+            //    Console.WriteLine($"claims total {claims.Count}");
+            //    var claim = (from c in claims where c.Type == "cuentaActiva" select c).Single();
+            //    claims.Remove(claimElim);
+            //}
+            //catch (Exception e)
+            //{
+            //    Console.WriteLine($"error {e}");
+            //}
+            #endregion
+
+
+            int IdUser = int.Parse(claims.Where(x=>x.Type == "Id").Select(x=>x.Value).First());
+
+            string usuario = claims.Where(x => x.Type == ClaimTypes.Name).Select(x => x.Value).First();
+
+            List<string> cuentasH = new List<string>();
+            string cuentaV = string.Empty;
+
+            for(int i =0; i< claims.Count; i++)
+            {
+                if (claims[i].Type.Contains($"cuentaH"))
+                {
+                    cuentasH.Add(claims[i].Value.ToString());
+                }
+                if (claims[i].Type.Contains("cuentaV"))
+                {
+                    cuentaV = claims[i].Value.ToString();
+                }
+                
+            }
+            bool resp = await agregarClaims(IdUser,cuentasH,cuentaV,usuario,cuentaId);
+
+            if (resp)
+            {
+                return Ok("se cargo correctamente");
+            }
+            else
+            {
+                return BadRequest("error false resp");
+            }
+            
+        }
+        #endregion
+
         [HttpPost("/Registro")]
-        public ActionResult Registro(Usuario usuario)
+        public async Task<ActionResult> Registro(Usuario usuario)
         {
             usuario.Pass = ConvertirSha256(usuario.Pass);
 
             try
             {
-                var UserExists = context.Usuarios.Any(x => x.NombreUser == usuario.NombreUser);
+                var UserExists = await context.Usuarios.AnyAsync(x => x.NombreUser == usuario.NombreUser);
+
                 if (UserExists)
                 {
                     return BadRequest($"El nombre de usuario '{usuario.NombreUser}' ya existe.");
@@ -110,6 +204,7 @@ namespace SoyViajero.Server.Controllers
                 context.Usuarios.Add(usuario);
 
                 context.SaveChangesAsync();
+
                 return Ok();
             }
             catch (Exception )
@@ -135,14 +230,59 @@ namespace SoyViajero.Server.Controllers
             }
             return sb.ToString();
         }
-        //private bool UserExist(string userName) //confirma si el usuario con nombre x existe
-        //{
-        //    var user = context.Usuarios
-        //        .Where(u => u.NombreUser == userName)
-        //        .FirstOrDefault();
-        //    if (user != null)
-        //        return false;
-        //    return true;
-        //}
+        
+        private async Task<bool> agregarClaims( int IdUser,
+                                                List<string> cuentasH,
+                                                string cuentasV,
+                                                string usuario,
+                                                string cuentaActiva="null")
+        {
+            try
+            {
+                //guarda los datos de la sesion 
+                var claims = new List<Claim>
+                 {
+                    new Claim(ClaimTypes.Name, usuario),
+                    new Claim("Id", IdUser.ToString()),
+
+                 };
+
+                if (cuentasV != string.Empty)
+                {
+                    claims.Add(new Claim("cuentaV", cuentasV)); // guarda id de viajero
+                }
+                if (cuentaActiva != "null")
+                {
+                    claims.Add(new Claim("cuentaActiva", cuentaActiva));
+                }
+
+
+                for (int i = 0; i < cuentasH.Count; i++)       // por cada cuentaH guarda el id en un nuevo claim
+                {
+
+                    claims.Add(new Claim($"cuentaH{i}", cuentasH[i]));
+
+                }
+
+
+
+                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+
+                 await HttpContext.SignInAsync
+                    (CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(claimsIdentity));
+
+                foreach (var item in claims)    //prueba
+                    Console.WriteLine($"+++++++{item.Type} = {item.Value} estas son de memoria");
+
+                    return true;
+            }
+            catch (Exception )
+            {
+                return  false;
+            }
+        }
+
     }
 }
