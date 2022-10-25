@@ -23,7 +23,7 @@ namespace SoyViajero.Server.Controllers
 
         #region GET
         [HttpGet("/Publicaciones")]
-        public async Task<ActionResult<List<Publicacion>>> Get()
+        public async Task<ActionResult<List<Publicacion>>> Get() // para perfil
         {
             var CuentaActivaId = User.Claims.Where(c => c.Type == "cuentaActiva").Select(x => x.Value).FirstOrDefault();
             if (CuentaActivaId == null)
@@ -33,6 +33,19 @@ namespace SoyViajero.Server.Controllers
                                 .Where(p => p.CuentasId == CuentaActivaId)
                                 .ToListAsync();
             
+            if (publicaciones == null)
+            {
+                return NotFound($"No hay publicaciones para mostrar");
+            }
+            return publicaciones;
+        }
+
+        [HttpGet("/PublicacionesMuro")]   // muestra todas las publicaciones
+        public async Task<ActionResult<List<Publicacion>>> Get(string aux) // para perfil
+        {
+            var publicaciones = await context.Publicaciones
+                                .ToListAsync();
+
             if (publicaciones == null)
             {
                 return NotFound($"No hay publicaciones para mostrar");

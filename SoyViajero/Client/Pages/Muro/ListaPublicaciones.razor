@@ -6,9 +6,7 @@
 <a class= "btn btn-primary" href="Muro/CrearPublicacion">Nueva publiación</a>
 
 
-
-
- <div class="form-group">
+ @*<div class="form-group">
             <label>CuentasId</label>
             <div>
                 <InputText class="form-control" @bind-Value="@publicacion.CuentasId"/>
@@ -43,7 +41,7 @@
         <div class="form-group">
             <label>CuentasId</label>
             <div>
-                <InputText class="form-control" @bind-Value="@publicacion.CuentasId"/>
+                <InputText class="form-control" @bind-Value="@publicacion."/>
                 <ValidationMessage For="@(() => publicaciones.CuentasId)"/>
 
             </div>
@@ -72,10 +70,10 @@
              </td>
            </tr>
     }
- }
+ }*@
 
 
-<Confirmacion @ref="confirmacion"
+@*<Confirmacion @ref="confirmacion"
               verCancelar="true"
               verOk="true"
               textOk="Ok"
@@ -88,10 +86,10 @@
                   ¿Está seguro que desea continuar?
               </div>
 </Confirmacion>
-
+*@
 
 @code {
-    List<Publicacion> publicaciones;
+    List<Publicacion> publicaciones = new List<Publicacion>();
     Publicacion PublicacionBorrar;
 
     Confirmacion confirmacion; 
