@@ -184,7 +184,7 @@ namespace SoyViajero.Server.Controllers
         #endregion
 
         [HttpPost("/Registro")]
-        public async Task<ActionResult> Registro(Usuario usuario)
+        public async Task<ActionResult<Usuario>> Registro(Usuario usuario)
         {
             usuario.Pass = ConvertirSha256(usuario.Pass);
 
@@ -202,10 +202,10 @@ namespace SoyViajero.Server.Controllers
 
                 return Ok();
             }
-            catch (Exception )
+            catch (Exception e )
             {
                 
-                return BadRequest("Error, vuelva a intentar");
+                return BadRequest("Error, vuelva a intentar" +e);
             }
         }
         #endregion

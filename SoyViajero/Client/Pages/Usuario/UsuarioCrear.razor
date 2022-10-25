@@ -12,7 +12,7 @@
     private Usuario usuario = new ();
     private async void Grabar()
     {
-        var httpRespuesta = await http.Post<Usuario>("api/Usuario", usuario); /*(no se si api/usuario esta bien)*/
+        var httpRespuesta = await http.Post<Usuario>("/Registro", usuario); /*(no se si api/usuario esta bien)*/
         if (httpRespuesta.Error)
         {
             var body = httpRespuesta.HttpResponseMessage;
