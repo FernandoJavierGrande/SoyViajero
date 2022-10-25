@@ -1,0 +1,50 @@
+﻿@page "Muro/Editar/{PublicacionId:id}"
+@inject IHttpService http
+@inject NavegationManager navegationManager
+
+<h3>Editar Publicacion</h3>
+<formPublicacion publicacion="publicacion" oncancel="Cancelar" onvalidSumit="grabar" />
+
+
+@code {
+    private Publicacion publicacion = new Publicacion();
+    [Parameter] public int publicacionId { get; set; }
+
+    protected async override Task OnInitializedAasync()
+    {
+        await Mostrar();
+    }
+
+
+    private async Task Mostrar()
+    {
+        var respuesta = await http.Get<Publicacion>($"api/Publicacion/¨{publicacionId}");
+        if respuesta.Error()
+        {
+            var body = httpRespuesta.HttpResponseMessage;
+        }
+        else
+        {
+            publicacion = respuesta.Respuesta; 
+        }
+    }
+
+
+
+   private async void Grabar()
+    { 
+        var respuesta = await http.Put<Publicacion>($"api/Publicacion/{publicacionId}",
+                                                     publicacion);
+        if (respuesta.Error)
+        {
+            var body = respuesta.HttpResponseMessage;
+        }
+        navigationManager.NavigateTo("/Muro");
+    }
+
+    private void Cancelar()
+    {
+        navigationManager.NavigateTo("/Muro");
+
+    }
+}
