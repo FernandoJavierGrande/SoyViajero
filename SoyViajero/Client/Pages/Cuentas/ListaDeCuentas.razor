@@ -42,7 +42,7 @@
                 <tr>
                     <td>@item.Nombre</td>
                     <td>Hostel</td>
-                    <td>@item.Id</td>0+
+                    <td>@item.Id</td>
                     <button class ="btn btn-secondary" @onclick="()=>logCuenta(item.Id)">Ingresar</button>
                 </tr>
             }
@@ -82,18 +82,17 @@
     private async Task logCuenta(string Id)
     {
         Console.WriteLine($"id = {Id}");
-        var respuesta = await http.Post($"/cambiarCuenta", Id);
+        var respuesta = await http.Get<int>($"api/Login/{Id}");
         if (!respuesta.Error)
         {
-           
-            navigationManager.NavigateTo("/SeleccionCuenta");
+            navigationManager.NavigateTo("Cuentas/CrearHostel");
         }
         else
         {
-            Console.WriteLine("respuesta "+respuesta.Respuesta);
+            Console.WriteLine("respuesta "+respuesta.Respuesta.ToString());
             navigationManager.NavigateTo("/Muro");
         }
-
+        
     }
 
 

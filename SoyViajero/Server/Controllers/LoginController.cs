@@ -18,14 +18,14 @@ namespace SoyViajero.Server.Controllers
     public class LoginController : ControllerBase
     {
         private readonly Context context;
-        
+
         //private List<Claim> claims = new List<Claim>();
-        public  LoginController(Context context) => this.context = context;
-        
+        public LoginController(Context context) => this.context = context;
+
 
         #region post
         [HttpPost("{usuario},{pass}")]
-        public async Task<ActionResult> postLog(string usuario,string pass)
+        public async Task<ActionResult> postLog(string usuario, string pass)
         {
             try
             {
@@ -37,19 +37,19 @@ namespace SoyViajero.Server.Controllers
                     .FirstOrDefault();
 
                 if (IdUser == 0) // si no devuelve nada es porque no coincide
-                    return BadRequest("El usuario o contraseña no son correctos " );
+                    return BadRequest("El usuario o contraseña no son correctos ");
 
                 var cuentasH = await context.CuentasHostel // busca las cuentas de hostel que tenga registradas
                     .Where(c => c.UsuarioId == IdUser)
-                    .Select(x =>x.Id)
+                    .Select(x => x.Id)
                     .ToListAsync();
-                
+
                 var cuentasV = await context.CuentasViajeros // selecciona si tiene la cuenta de viajero
-                    .Where(c=>c.UsuarioId==IdUser)
-                    .Select(x =>x.Id)
+                    .Where(c => c.UsuarioId == IdUser)
+                    .Select(x => x.Id)
                     .FirstAsync();
 
-                bool resp = await agregarClaims(IdUser,cuentasH,cuentasV,usuario);
+                bool resp = await agregarClaims(IdUser, cuentasH, cuentasV, usuario);
 
 
                 #region borrar
@@ -95,22 +95,21 @@ namespace SoyViajero.Server.Controllers
                 #endregion
 
                 return Ok($"id user {IdUser}");
-                
+
 
             }
-            catch (Exception )
+            catch (Exception)
             {
                 return BadRequest("El usuario o contraseña no son correctos ");
             }
         }
 
         #region cambiarCuenta
-        [Authorize]
-        [HttpPost("/cambiarCuenta")]
-        public async Task<ActionResult> Post(string cuentaId)
+        [HttpGet("{cuentaId}")]
+        public async Task<ActionResult<int>> Get(string cuentaId)
         {
             //comparar si el id de la cuenta existe entre los claims cargados
-
+            Console.WriteLine($"entro al controlador {cuentaId}" );
             bool validarCuenta = false;
             
             var claims =  User.Claims.ToList();
@@ -133,7 +132,6 @@ namespace SoyViajero.Server.Controllers
             }
             
 
-            Console.WriteLine($"valor de validar cuenta2 {validarCuenta}");
             if (!validarCuenta)
                 return BadRequest("Error");
 
@@ -178,12 +176,9 @@ namespace SoyViajero.Server.Controllers
 
             if (resp)
             {
-                return Ok("se cargo correctamente");
+                return 1;
             }
-            else
-            {
-                return BadRequest("error false resp");
-            }
+            return 0;
             
         }
         #endregion
@@ -274,7 +269,7 @@ namespace SoyViajero.Server.Controllers
                     new ClaimsPrincipal(claimsIdentity));
 
                 foreach (var item in claims)    //prueba
-                    Console.WriteLine($"+++++++{item.Type} = {item.Value} estas son de memoria");
+                    Console.WriteLine($"+++++++{item.Type} = {item.Value} ");
 
                     return true;
             }
