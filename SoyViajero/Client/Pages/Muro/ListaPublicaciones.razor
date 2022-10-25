@@ -1,4 +1,4 @@
-﻿@page "/Muro"
+﻿@*@page "/Muro"
 @inject IHttpService http
 
 <h3>Muro</h3>
@@ -89,48 +89,48 @@
 *@
 
 @code {
-    List<Publicacion> publicaciones = new List<Publicacion>();
-    Publicacion PublicacionBorrar;
+    //List<Publicacion> publicaciones = new List<Publicacion>();
+    //Publicacion PublicacionBorrar;
 
-    Confirmacion confirmacion; 
+    //Confirmacion confirmacion; 
 
-    protected override async Task OnInitializedAdsync()
-    {
-        base.OnInitializedAsync();
-        await Leer();
-    }
+    //protected override async Task OnInitializedAdsync()
+    //{
+    //    base.OnInitializedAsync();
+    //    await Leer();
+    //}
 
-    private async Task Leer() 
-    {
-        var respuesta = await http.Get<IList<Publicacion>>("api/Publicacion");
-        if (!respuesta.Error)
-        {
-            publicaciones = respuesta.Respuesta; 
-        }
-    }
+    //private async Task Leer() 
+    //{
+    //    var respuesta = await http.Get<IList<Publicacion>>("api/Publicacion");
+    //    if (!respuesta.Error)
+    //    {
+    //        publicaciones = respuesta.Respuesta; 
+    //    }
+    //}
 
-    private void Eliminar (Publicacion publicacionBorar)
-    {
-        PublicacionBorar = publicacionBorar(); 
-        confirmacion.Ver();
-    }
+    //private void Eliminar (Publicacion publicacionBorar)
+    //{
+    //    PublicacionBorar = publicacionBorar(); 
+    //    confirmacion.Ver();
+    //}
 
-    private void Cancerlar()
-    {
-        confirmacion.Ocultar();
-        publicacionBorar= null; 
-    }
+    //private void Cancerlar()
+    //{
+    //    confirmacion.Ocultar();
+    //    publicacionBorar= null; 
+    //}
 
-    private async Task Borrar()
-    {
-        var respuesta = http.Delete($"api/Publicacion/{publicacionBorar.Id}")
-        if (respuesta.Error)
-        {
-            var body = await respuesta.GetBody(); 
-        }
-        Cancelar();
-        await Lerr(); 
-    }
+    //private async Task Borrar()
+    //{
+    //    var respuesta = http.Delete($"api/Publicacion/{publicacionBorar.Id}")
+    //    if (respuesta.Error)
+    //    {
+    //        var body = await respuesta.GetBody(); 
+    //    }
+    //    Cancelar();
+    //    await Lerr(); 
+    //}
 
 }
 
