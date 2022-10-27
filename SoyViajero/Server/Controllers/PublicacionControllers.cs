@@ -49,7 +49,9 @@ namespace SoyViajero.Server.Controllers
             if (publicaciones == null)
             {
                 return NotFound($"No hay publicaciones para mostrar");
+
             }
+
             return publicaciones;
         }
 
