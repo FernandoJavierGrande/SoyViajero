@@ -41,7 +41,7 @@ namespace SoyViajero.Server.Controllers
         }
 
         [HttpGet("/PublicacionesMuro")]   // muestra todas las publicaciones
-        public async Task<ActionResult<List<Publicacion>>> Get(string aux) // para perfil
+        public async Task<ActionResult<List<Publicacion>>> GetMuro() // para perfil
         {
             var publicaciones = await context.Publicaciones
                                 .ToListAsync();

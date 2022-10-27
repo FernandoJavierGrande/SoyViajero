@@ -205,7 +205,7 @@ namespace SoyViajero.Server.Controllers
             catch (Exception e )
             {
                 
-                return BadRequest("Error, vuelva a intentar" +e);
+                return BadRequest(" +++ Error, vuelva a intentar " +e);
             }
         }
         #endregion
