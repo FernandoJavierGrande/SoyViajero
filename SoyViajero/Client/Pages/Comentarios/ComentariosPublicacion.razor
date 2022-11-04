@@ -1,0 +1,42 @@
+﻿@page "/Muro/Comentarios/{publicacionId:int}"
+@inject IHttpService http
+<h3>ComentariosPublicacion</h3>
+
+<table>
+<tr>
+    <td>@publicacion.Texto</td>
+    <td>@publicacion.FechaCreacion</td>
+    </tr>
+    <tr>
+        @foreach (var item in comentarios)
+        {
+            @if (item.PublicacionId == publicacionId)
+            {
+                <td>@item.texto</td>
+                <td>@item.FechaCreacion</td>                
+            }
+        }
+
+     </tr>
+</table>
+
+
+@code {
+    [Parameter] public int publicacionId {get;set;}
+    List<Comentario> comentarios;
+    private Publicacion publicacion;
+
+    private async Task Leer()
+    {
+        var respuesta = await http.Get<List<Comentario>>("api/Comentarios");
+        if(!respuesta.Error)
+        {
+            comentarios = respuesta.Respuesta;
+        }
+        var respuestaPublicacion = await http.Get<Publicacion>($"{publicacionId}");
+        if(!respuesta.Error)
+        {
+            publicacion = respuestaPublicacion.Respuesta;
+        }        
+    }
+}

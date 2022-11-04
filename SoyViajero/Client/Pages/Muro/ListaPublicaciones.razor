@@ -26,10 +26,10 @@
                 <td>@item.Texto</td>
                 <td>@item.FechaCreacion</td>
                 <td>
-                    <button class="btn btn-danger"
-                            @onclick="()=>Eliminar(item)">
-                        Borrar
-                    </button>
+                    <a class="btn btn-primary"
+                       href="Muro/Comentarios/@item.ID" style="width:40%; margin-top:1rem;">
+                        Ver comentarios
+                    </a>
                 </td>
             </tr>
         }

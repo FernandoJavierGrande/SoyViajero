@@ -43,8 +43,12 @@ namespace SoyViajero.Server.Controllers
                     .Where(x => x.NombreUser == usuario && x.Pass == pass)
                     .FirstOrDefault();
 
+                //var User = await context.Usuarios.Where(x => x.NombreUser == usuario);
+
+
                 if (User == null) // si no devuelve nada es porque no coincide
                     return BadRequest("El usuario o contraseña no son correctos ");
+
 
                 var cuentasH = await context.CuentasHostel // busca las cuentas de hostel que tenga registradas
                     .Where(c => c.UsuarioId==User.Id)
