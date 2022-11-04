@@ -23,33 +23,40 @@ namespace SoyViajero.Server.Controllers
         public LoginController(Context context) => this.context = context;
 
 
-        #region post
-        [HttpPost("{usuario},{pass}")]
-        public async Task<ActionResult> postLog(string usuario, string pass)
+        [HttpGet("/Buscar/{NombreUser}")]
+        public async Task<ActionResult<bool>> Disp(string NombreUser)
+        {
+            var resp = await context.Usuarios.AnyAsync(x => x.NombreUser == NombreUser);
+
+            return !resp;
+        }
+
+        #region log
+        [HttpGet("{usuario},{pass}")]
+        public async Task<ActionResult<Usuario>> Get(string usuario, string pass)
         {
             try
             {
                 pass = ConvertirSha256(pass);
 
-                var IdUser = context.Usuarios      // compara que las cuenta y la clave coincida
+                var User = context.Usuarios      // compara que las cuenta y la clave coincida
                     .Where(x => x.NombreUser == usuario && x.Pass == pass)
-                    .Select(u => u.Id)
                     .FirstOrDefault();
 
-                if (IdUser == 0) // si no devuelve nada es porque no coincide
+                if (User == null) // si no devuelve nada es porque no coincide
                     return BadRequest("El usuario o contraseña no son correctos ");
 
                 var cuentasH = await context.CuentasHostel // busca las cuentas de hostel que tenga registradas
-                    .Where(c => c.UsuarioId == IdUser)
+                    .Where(c => c.UsuarioId==User.Id)
                     .Select(x => x.Id)
                     .ToListAsync();
 
                 var cuentasV = await context.CuentasViajeros // selecciona si tiene la cuenta de viajero
-                    .Where(c => c.UsuarioId == IdUser)
+                    .Where(c => c.UsuarioId == User.Id)
                     .Select(x => x.Id)
                     .FirstAsync();
 
-                bool resp = await agregarClaims(IdUser, cuentasH, cuentasV, usuario);
+                bool resp = await agregarClaims(User.Id, cuentasH, cuentasV, usuario);
 
 
                 #region borrar
@@ -94,7 +101,7 @@ namespace SoyViajero.Server.Controllers
                 //     new ClaimsPrincipal(claimsIdentity));
                 #endregion
 
-                return Ok($"id user {IdUser}");
+                return User;
 
 
             }
@@ -103,6 +110,7 @@ namespace SoyViajero.Server.Controllers
                 return BadRequest("El usuario o contraseña no son correctos ");
             }
         }
+        #endregion
 
         #region cambiarCuenta
         [HttpGet("{cuentaId}")]
@@ -134,24 +142,6 @@ namespace SoyViajero.Server.Controllers
 
             if (!validarCuenta)
                 return BadRequest("Error");
-
-            #region eli
-
-            //Console.WriteLine("antes del try");
-
-
-            //try
-            //{
-            //    Console.WriteLine($"claims total {claims.Count}");
-            //    var claim = (from c in claims where c.Type == "cuentaActiva" select c).Single();
-            //    claims.Remove(claimElim);
-            //}
-            //catch (Exception e)
-            //{
-            //    Console.WriteLine($"error {e}");
-            //}
-            #endregion
-
 
             int IdUser = int.Parse(claims.Where(x=>x.Type == "Id").Select(x=>x.Value).First());
 
@@ -205,10 +195,10 @@ namespace SoyViajero.Server.Controllers
             catch (Exception e )
             {
                 
-                return BadRequest(" +++ Error, vuelva a intentar " +e);
+                return BadRequest(" +++ Error, vuelva a intentar " +e); //borrar
             }
         }
-        #endregion
+        
 
 
 

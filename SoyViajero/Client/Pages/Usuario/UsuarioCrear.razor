@@ -3,25 +3,62 @@
 @inject NavigationManager navigationManager
 
 <h3>Crear</h3>
-<FormUsuario usuario = "usuario" onCancel="Cancelar" onValidSubmit="Grabar"/>
+<FormUsuario usuario = "usuario" onCancel="Cancelar" onValidSubmit="Buscar"/>
 
+<Confirmacion
+                @ref ="confirmacion"
+                verOk="true"
+                verCancelar="false"
+                textOk="Aceptar"
+                onCancel="Cancelar"
+                onConfirm="Cerrar"
+                Titulo="Nombre no disponible">
 
+                <div>
+                    El nombre de usuario: '@usuario.NombreUser' no se encuentra disponible.
+                </div>
+</Confirmacion>
 
 
 @code {
-    private Usuario usuario = new ();
-    private async void Grabar()
+    private Usuario usuario = new Usuario();
+    Confirmacion confirmacion;
+
+    private async Task Grabar()
     {
-        var httpRespuesta = await http.Post<Usuario>("/Registro", usuario); /*(no se si api/usuario esta bien)*/
+        var httpRespuesta = await http.Post<Usuario>("/Registro", usuario);
         if (httpRespuesta.Error)
         {
             var body = httpRespuesta.HttpResponseMessage;
         }
-        navigationManager.NavigateTo("/Cuentas");
+        navigationManager.NavigateTo("/"); 
     }
+
+    public async Task Buscar()
+    {
+        var resp = await http.Get<bool>($"/Buscar/{usuario.NombreUser}");
+        if (!resp.Error)
+        {
+            if (!resp.Respuesta)
+            {
+
+                confirmacion.Ver();
+            }
+            else
+            {  
+                await Grabar();
+            }
+
+        }
+    }
+
     private void Cancelar()
     {
-        navigationManager.NavigateTo("/Cuentas");
+        navigationManager.NavigateTo("/");
 
+    }
+    private void Cerrar()
+    {
+        confirmacion.Ocultar();
     }
 }

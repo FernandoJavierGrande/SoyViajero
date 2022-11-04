@@ -1,0 +1,55 @@
+﻿@page "/"
+@inject IHttpService http
+@inject NavigationManager navigationManager
+
+<h3>Login</h3>
+
+<LoginForm usuario="usuario" onValidSubmit="Loguearse">
+
+</LoginForm>
+
+<div class="form-control">
+    <label > Si no posee cuenta puede registrarse</label>
+    <div>
+        <a class="btn btn-secondary" href="Usuario/Crear"> Crear Usuario</a>
+    </div>
+</div>
+
+<Confirmacion  @ref ="confirmacion"
+                verOk = "true"
+                verCancelar = "false"
+                textOk = "Aceptar"
+                onCancel = "Cancelar"
+                onConfirm = "Cancelar"
+                Titulo = "Error">
+                <div>
+                    Usuario o clave incorrectos
+                </div>
+
+</Confirmacion>
+
+
+@code {
+    private Usuario usuario = new Usuario();
+    Confirmacion confirmacion;
+
+    public async Task Loguearse()
+    {
+        var resp = await http.Get<Usuario>($"api/Login/{usuario.NombreUser},{usuario.Pass}");
+        if (resp.Error)
+        {
+            confirmacion.Ver();
+            Console.WriteLine("false en resp error");
+        }
+        else
+        {
+            navigationManager.NavigateTo("/Cuentas");   
+        }
+    }
+
+    private void Cancelar()
+    {
+        confirmacion.Ocultar();
+    }
+
+}

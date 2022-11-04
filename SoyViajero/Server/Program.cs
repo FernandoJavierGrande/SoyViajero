@@ -26,9 +26,9 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(option => {
-        option.LoginPath = "/api/Login";
-        option.ExpireTimeSpan = TimeSpan.FromMinutes(20);
-        option.AccessDeniedPath = "/counter";
+        option.LoginPath = "/";
+        option.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+        option.AccessDeniedPath = "/";
     });
 
 var app = builder.Build();

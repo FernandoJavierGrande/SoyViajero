@@ -37,5 +37,16 @@
     [Parameter] public Usuario usuario { get; set; }
     [Parameter] public EventCallback onValidSubmit { get; set; }
     [Parameter] public EventCallback onCancel { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        usuario.Id = 0;
+        usuario.cuentasHostel = null;
+        usuario.cuentaViajero = null;
+        usuario.fechaCreacion = DateTime.Today.Date;
+
+    }
 }
 
