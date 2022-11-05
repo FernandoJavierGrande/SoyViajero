@@ -58,7 +58,10 @@ namespace SoyViajero.Server.Controllers
                 var cuentasV = await context.CuentasViajeros // selecciona si tiene la cuenta de viajero
                     .Where(c => c.UsuarioId == User.Id)
                     .Select(x => x.Id)
-                    .FirstAsync();
+                    .FirstOrDefaultAsync();
+
+                if (cuentasV == null)
+                    cuentasV =String.Empty;
 
                 bool resp = await agregarClaims(User.Id, cuentasH, cuentasV, usuario);
 
@@ -121,7 +124,7 @@ namespace SoyViajero.Server.Controllers
         public async Task<ActionResult<int>> Get(string cuentaId)
         {
             //comparar si el id de la cuenta existe entre los claims cargados
-            Console.WriteLine($"entro al controlador {cuentaId}" );
+            
             bool validarCuenta = false;
             
             var claims =  User.Claims.ToList();
@@ -142,7 +145,6 @@ namespace SoyViajero.Server.Controllers
                 }
 
             }
-            
 
             if (!validarCuenta)
                 return BadRequest("Error");
@@ -246,12 +248,17 @@ namespace SoyViajero.Server.Controllers
                 }
 
 
-                for (int i = 0; i < cuentasH.Count; i++)       // por cada cuentaH guarda el id en un nuevo claim
+                if (cuentasH.Count>0)
                 {
+                    for (int i = 0; i < cuentasH.Count; i++)       // por cada cuentaH guarda el id en un nuevo claim
+                    {
 
-                    claims.Add(new Claim($"cuentaH{i}", cuentasH[i]));
+                        claims.Add(new Claim($"cuentaH{i}", cuentasH[i]));
 
+                    }
+                    Console.WriteLine("cuentash es mayor a cero");
                 }
+                
 
 
 
@@ -267,8 +274,9 @@ namespace SoyViajero.Server.Controllers
 
                     return true;
             }
-            catch (Exception )
+            catch (Exception e )
             {
+                Console.WriteLine(e);
                 return  false;
             }
         }

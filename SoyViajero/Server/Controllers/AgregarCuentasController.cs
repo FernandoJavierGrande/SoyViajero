@@ -12,7 +12,7 @@ namespace SoyViajero.Server.Controllers
 {
     [ApiController]
     [Route("api/Cuentas")]
-    [Authorize]
+    //[Authorize]
     public class AgregarCuentasController : ControllerBase
     {
         private readonly Context context;
@@ -25,32 +25,41 @@ namespace SoyViajero.Server.Controllers
         #region Get
         [HttpGet]
         public async Task<ActionResult<Usuario>> Get()
-        {  
+        {
             
             try
             {
                 // extraigo el id del usuario que inicio la sesion
                  var IdUser = int.Parse(User.Claims.Where(x => x.Type == "Id").Select(c => c.Value).First());
 
-                //Console.WriteLine($"claims id {IdUser}");
+                
 
                 var cuentas = await context.Usuarios
                             .Where(u => u.Id == IdUser)
                             .Include(h => h.cuentasHostel)
                             .Include(v => v.cuentaViajero)
                             .FirstOrDefaultAsync();
+
+                //Console.WriteLine($"++++{cuentas.cuentaViajero}");
+                //Console.WriteLine($"++++{cuentas.cuentasHostel.Count}");
+
+
                 return cuentas;
             }
-            catch (Exception)
+            catch (Exception )
             {
 
-                return BadRequest("");
+                return BadRequest();
             }
 
         }
         #endregion
 
         #region post
+
+        #region elim
+
+
         //[HttpPost]
         //public async Task<ActionResult<bool>> Post(Usuario usuario)
         //{
@@ -72,7 +81,7 @@ namespace SoyViajero.Server.Controllers
         //    }
 
         //}
-
+        #endregion
 
         [HttpPost("/AgregarHostel")]
         public async Task<ActionResult<CuentaHostel>>Post(CuentaHostel hostel) // agrega una nueva cuenta de hostel
