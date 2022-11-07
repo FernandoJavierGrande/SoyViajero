@@ -7,11 +7,14 @@
 <a class= "btn btn-primary" href="Cuentas/CrearHostel">Crear nueva cuenta de hostel</a>
 <a class= "btn btn-primary" href="Cuentas/CrearViajero">Crear nueva cuenta de viajero</a>
 
-<table class="table">
+<table class="table table-hover">
     <thead>
         <tr>
             <th scope="col">Nombre</th>
             <th scope="col">Tipo de cuenta</th> 
+            @*<th scope="col"> </th>*@
+            <th scope="col"> </th>
+            <th scope="col"> </th>
             <th scope="col"> </th>
         </tr>
     </thead>
@@ -31,7 +34,7 @@
                 <tr>
                     <td>@cuentaV.Nombre @cuentaV.Apellido</td>
                     <td>Viajero</td>
-                    <td>@cuentaV.Id</td>
+                    @*<td>@cuentaV.Id</td>*@
                     <td> <a class ="btn btn-dark" @onclick="()=>logCuenta(cuentaV.Id)" >Ingresar</a> </td>
                     <td> <a class="btn btn-warning" href="/CuentasViajero/Editar/@cuentaV.Id">Modificar</a> </td>
                     <td> <a class="btn btn-danger" @onclick="()=>Eliminar(cuentaV.Id)">Eliminar</a> </td>
@@ -44,7 +47,7 @@
                 <tr>
                     <td>@item.Nombre</td>
                     <td>Hostel</td>
-                    <td>@item.Id</td>
+                    @*<td>@item.Id</td>*@
                     <td> <a class ="btn btn-dark" @onclick="()=>logCuenta(item.Id)" >Ingresar</a> </td>
                     <td> <a class="btn btn-warning" href="/CuentasHostel/Editar/@item.Id">Modificar</a> </td>
                     <td> <a class="btn btn-danger" @onclick="()=>Eliminar(item.Id)">Eliminar</a> </td>
@@ -54,26 +57,35 @@
     </tbody>
     
     </table>
+
+
+    <div >
+        <button class="btn btn-danger" @onclick="@EliminarUsuario">Eliminar mi usuario</button>
+    </div>
+
     <Confirmacion  @ref ="confirmacion"
                 verOk = "true"
-                verCancelar = "false"
+                verCancelar = "true"
                 textOk = "Aceptar"
                 onCancel = "Cerrar"
                 onConfirm = "Delete"
-                Titulo = "¿Eliminar cuenta?">
+                Titulo = "@mensajeTitulo">
                 <div>
-                    ¿Desea eliminar la cuenta "@CuentaElim"?
+                    @mensajeConfirmacion
                 </div>
 
-</Confirmacion>
+    </Confirmacion>
 
 
 @code {
     List<CuentaHostel> cuentasH = new List<CuentaHostel>();
     CuentaViajero  cuentaV = new CuentaViajero();
     Usuario usuario = new Usuario();
-    Confirmacion confirmacion;
+    Confirmacion confirmacion, EliminacionUsuario;
+    private string mensajeConfirmacion, mensajeTitulo;
     private string CuentaElim;
+    private bool banderaDelete;
+
 
 
     protected override async Task OnInitializedAsync()
@@ -102,39 +114,57 @@
         var respuesta = await http.Get<int>($"api/Login/{Id}");
         if (!respuesta.Error)
         {
-            navigationManager.NavigateTo("Cuentas/CrearHostel");
+            navigationManager.NavigateTo("/Muro");
         }
         else
         {
-            Console.WriteLine("respuesta "+respuesta.Respuesta.ToString());
-            navigationManager.NavigateTo("/Muro");
+            navigationManager.NavigateTo("/");
         }
 
     }
     private async Task Delete()
     {
-        if (CuentaElim.Contains("v"))
+        if (banderaDelete)
         {
-            var resp = await http.Delete($"/EliminarViajero");
-            if(resp.Error)
+            if (CuentaElim.Contains("v"))
+            {
+                var resp = await http.Delete($"/EliminarViajero");
+                if(resp.Error)
+                {
+                    var body = "Error";
+                }
+                Cerrar();
+            }
+            else if(CuentaElim.Contains("h"))
+            {
+                var resp = await http.Delete($"/EliminarHostel/{CuentaElim}");
+                if(resp.Error)
+                {
+                    var body = "Error";
+                }
+                Cerrar();
+            }
+
+        }
+        else if(!banderaDelete)
+        {
+            var resp = await http.Delete("api/Login");
+            if (resp.Error)
             {
                 var body = "Error";
             }
             Cerrar();
+            navigationManager.NavigateTo("/");
         }
-        else if(CuentaElim.Contains("h"))
-        {
-            var resp = await http.Delete($"/EliminarHostel/{CuentaElim}");
-            if(resp.Error)
-            {
-                var body = "Error";
-            }
-            Cerrar();
-        }
+
+
     }
     private void Eliminar(string idCuenta)
     {
         CuentaElim = idCuenta;
+        mensajeConfirmacion = $"¿Desea eliminar la cuenta {CuentaElim}?";
+        mensajeTitulo = "¿Eliminar cuenta?";
+        banderaDelete = true;
         confirmacion.Ver();
     }
     private void Cerrar()
@@ -142,9 +172,12 @@
         confirmacion.Ocultar();
         CuentaElim = string.Empty;
     }
-
-
-
-
+    private void EliminarUsuario()
+    {
+        mensajeConfirmacion = $"¿Desea eliminar su usuario? Esto eliminará el usuario y las cuentas asocuadas a él";
+        mensajeTitulo = "¿Eliminar Usuario?";
+        banderaDelete = false;
+        confirmacion.Ver();
+    }
 }
 

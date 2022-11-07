@@ -204,9 +204,34 @@ namespace SoyViajero.Server.Controllers
                 return BadRequest(" +++ Error, vuelva a intentar " +e); //borrar
             }
         }
-        
 
 
+        #region delete
+        [HttpDelete()]
+        public async Task<ActionResult> Delete()
+        {
+
+            var Id = int.Parse(User.Claims.Where(c => c.Type == "Id").Select(x => x.Value).First());
+
+            var userEliminar =  await context.Usuarios.Where(u=>u.Id == Id).FirstOrDefaultAsync();
+
+            if (userEliminar == null)
+            {
+                return NotFound("el usuario no fue encontrado");
+            }
+
+            try
+            {
+                context.Usuarios.Remove(userEliminar);
+                await context.SaveChangesAsync();
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("no se pudo eliminar");
+            }
+        }
+        #endregion
 
         public static string ConvertirSha256(string texto)
         {
