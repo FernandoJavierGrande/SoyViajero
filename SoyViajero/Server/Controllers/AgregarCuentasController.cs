@@ -16,23 +16,23 @@ namespace SoyViajero.Server.Controllers
     public class AgregarCuentasController : ControllerBase
     {
         private readonly Context context;
-        
+
 
         public AgregarCuentasController(Context context)
             => this.context = context;
-            
+
 
         #region Get
         [HttpGet]
         public async Task<ActionResult<Usuario>> Get()
         {
-            
+
             try
             {
                 // extraigo el id del usuario que inicio la sesion
-                 var IdUser = int.Parse(User.Claims.Where(x => x.Type == "Id").Select(c => c.Value).First());
+                var IdUser = int.Parse(User.Claims.Where(x => x.Type == "Id").Select(c => c.Value).First());
 
-                
+
 
                 var cuentas = await context.Usuarios
                             .Where(u => u.Id == IdUser)
@@ -46,12 +46,41 @@ namespace SoyViajero.Server.Controllers
 
                 return cuentas;
             }
-            catch (Exception )
+            catch (Exception)
             {
 
                 return BadRequest();
             }
 
+        } 
+
+        [HttpGet("/BuscarHostel/{IdCuenta}")]
+        public async Task<ActionResult<CuentaHostel>> Get(string IdCuenta)
+        {
+            var CuentaH = await context.CuentasHostel.Where(c=>c.Id == IdCuenta).FirstOrDefaultAsync();
+
+            if (CuentaH == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return CuentaH;
+            }
+        }
+        [HttpGet("/BuscarViajero/{IdCuenta}")]
+        public async Task<ActionResult<CuentaViajero>> GetV(string IdCuenta)
+        {
+            var cuentaV = await context.CuentasViajeros.Where(c => c.Id == IdCuenta).FirstOrDefaultAsync();
+
+            if (cuentaV == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return cuentaV;
+            }
         }
         #endregion
 
@@ -84,7 +113,7 @@ namespace SoyViajero.Server.Controllers
         #endregion
 
         [HttpPost("/AgregarHostel")]
-        public async Task<ActionResult<CuentaHostel>>Post(CuentaHostel hostel) // agrega una nueva cuenta de hostel
+        public async Task<ActionResult<CuentaHostel>> Post(CuentaHostel hostel) // agrega una nueva cuenta de hostel
         {
             try
             {
@@ -92,15 +121,15 @@ namespace SoyViajero.Server.Controllers
                 hostel.Id = crearIdH();
 
                 context.CuentasHostel.Add(hostel);
-                
+
                 await context.SaveChangesAsync();
 
                 return hostel;
             }
             catch (Exception)
             {
-                
-                return BadRequest("no se pudo crear la nueva cuenta intente nuevamente " );
+
+                return BadRequest("no se pudo crear la nueva cuenta intente nuevamente ");
             }
         }
 
@@ -155,7 +184,7 @@ namespace SoyViajero.Server.Controllers
                 .Where(c => c.Id.Equals(CuentaViajero))
                 .FirstOrDefault();
 
-            if (viajeroElim == null) 
+            if (viajeroElim == null)
                 return NotFound("Cuenta incorrecta");
 
             try
@@ -174,7 +203,7 @@ namespace SoyViajero.Server.Controllers
         [HttpDelete("/EliminarHostel/{IdCuenta}")]
         public async Task<ActionResult> Delete(string IdCuenta)
         {
-            var cuentaEliminar =  context.CuentasHostel.Where(x => x.Id == IdCuenta).FirstOrDefault();
+            var cuentaEliminar = context.CuentasHostel.Where(x => x.Id == IdCuenta).FirstOrDefault();
 
             if (cuentaEliminar == null)
             {
@@ -190,6 +219,81 @@ namespace SoyViajero.Server.Controllers
             {
 
                 return BadRequest("no se pudo eliminar");
+            }
+        }
+        [HttpPut("/EditarViajero{IdCuenta}")]
+        public async Task<ActionResult> PutV(string IdCuenta,[FromBody] CuentaViajero  cuentaV)
+        {
+            if (IdCuenta != cuentaV.Id)
+            {
+                return BadRequest("Error");
+            }
+
+            var resp = await context.CuentasViajeros.Where(x => x.Id == IdCuenta).FirstOrDefaultAsync();
+            if (resp == null)
+            {
+                return NotFound("No encontrado");
+            }
+
+
+            resp.FotoPerfil = cuentaV.FotoPerfil;
+            resp.Nombre = cuentaV.Nombre;
+            resp.Apellido = cuentaV.Apellido;
+            resp.Ciudad = cuentaV.Ciudad;
+            resp.Descripcion = cuentaV.Descripcion;
+            resp.Edad = cuentaV.Edad;
+            resp.Mail = cuentaV.Mail;
+            resp.Pais = cuentaV.Pais;
+            resp.Provincia = cuentaV.Provincia;
+
+
+            try
+            {
+                context.CuentasViajeros.Update(resp);
+                await context.SaveChangesAsync();
+                return Ok();
+            }
+            catch (Exception)
+            {
+
+                return BadRequest("Error");
+            }
+        }
+
+        [HttpPut("/EditarHostel{IdCuenta}")]
+        public async Task<ActionResult> PutH(string IdCuenta, [FromBody] CuentaHostel cuentaH)
+        {
+            if (IdCuenta != cuentaH.Id)
+            {
+                return BadRequest("Error");
+            }
+
+            var resp = await context.CuentasHostel.Where(x => x.Id == IdCuenta).FirstOrDefaultAsync();
+            if (resp == null)
+            {
+                return NotFound("No encontrado");
+            }
+
+            resp.FotoPerfil = cuentaH.FotoPerfil;
+            resp.Nombre = cuentaH.Nombre;
+            resp.Ciudad = cuentaH.Ciudad;
+            resp.Descripcion = cuentaH.Descripcion;
+            resp.Mail = cuentaH.Mail;
+            resp.Pais = cuentaH.Pais;
+            resp.Provincia = cuentaH.Provincia;
+            resp.Telefono = cuentaH.Telefono;
+            resp.Activo = true;
+
+            try
+            {
+                context.CuentasHostel.Update(resp);
+                await context.SaveChangesAsync();
+                return Ok();
+            }
+            catch (Exception)
+            {
+
+                return BadRequest("Error");
             }
         }
         #endregion

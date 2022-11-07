@@ -71,7 +71,7 @@
             </div>
     </div>
 
-    <button class="btn btn-primary" type="submit">Crear</button>
+    <button class="btn btn-primary" type="submit">@txt_btn_ok</button>
     <button class="btn btn-secondary" @onclick="onCancel">Cancelar</button>
 </EditForm>
 
@@ -80,9 +80,11 @@
     [Parameter] public CuentaHostel cuentaHostel { get; set; }
     [Parameter] public EventCallback onValidSubmit { get; set; }
     [Parameter] public EventCallback onCancel { get; set; } 
+    [Parameter]public string txt_btn_ok { get; set; } = "Crear";
+
     protected override async Task OnInitializedAsync()
     {
-        cuentaHostel.Activo = true;
+        base.OnInitializedAsync();
 
     }
 }

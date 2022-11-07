@@ -8,14 +8,21 @@
     <td>@publicacion.FechaCreacion</td>
     </tr>
     <tr>
-        @foreach (var item in comentarios)
+        @if (comentarios.Count<1)
         {
-            @if (item.PublicacionId == publicacionId)
+            <label> No hay comentarios</label>
+        }else
+        {
+            @foreach (var item in comentarios)
             {
-                <td>@item.texto</td>
-                <td>@item.FechaCreacion</td>                
+                @if (item.PublicacionId == publicacionId)
+                {
+                    <td>@item.texto</td>
+                 <td>@item.FechaCreacion</td>                
+                }
             }
         }
+        
 
      </tr>
 </table>

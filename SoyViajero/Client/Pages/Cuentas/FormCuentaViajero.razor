@@ -82,7 +82,7 @@
     </div>
     
 
-    <button class="btn btn-primary" type="submit">Aceptar</button>
+    <button class="btn btn-primary" type="submit">@txt_btn_ok</button>
     <button class="btn btn-secondary" @onclick="onCancel">Cancelar</button>
 </EditForm>
 
@@ -90,4 +90,6 @@
     [Parameter] public CuentaViajero cuentaViajero { get; set; }
     [Parameter] public EventCallback onValidSubmit { get; set; }
     [Parameter] public EventCallback onCancel { get; set; }
+    
+    [Parameter]public string txt_btn_ok { get; set; } = "Crear";
 }

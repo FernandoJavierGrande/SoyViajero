@@ -1,0 +1,54 @@
+﻿@page "/CuentasHostel/Editar/{IdCuenta}"
+@inject IHttpService http
+@inject NavigationManager nav
+<h3>Modificar cuenta de hostel</h3>
+
+
+<FormCuentasHostel cuentaHostel="cuentaH" onCancel="Cancelar" onValidSubmit="Guardar" txt_btn_ok="Modificar">
+
+</FormCuentasHostel>
+
+
+@code {
+    [Parameter]
+    public string IdCuenta { get; set; }
+    private CuentaHostel cuentaH = new CuentaHostel();
+
+    protected override async Task OnInitializedAsync()
+    {
+        base.OnInitializedAsync();
+
+        await ReadCuentaH();
+    }
+
+
+    private async Task ReadCuentaH()
+    {
+        var resp = await http.Get<CuentaHostel>($"/BuscarHostel/{IdCuenta}");
+        if (resp.Error)
+        {
+            var body = resp.HttpResponseMessage;
+            Cancelar();
+        }
+        else
+        {
+            cuentaH = resp.Respuesta;
+        }   
+
+    }
+
+    private async Task Guardar()
+    {
+        var resp = await http.Put<CuentaHostel>($"/EditarHostel{IdCuenta}",cuentaH);
+        if (resp.Error)
+        {
+            var body = resp.HttpResponseMessage;
+        }
+        Cancelar();
+    }
+
+    private void Cancelar()
+    {
+        nav.NavigateTo("/Cuentas");
+    }
+}

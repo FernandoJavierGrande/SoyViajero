@@ -32,9 +32,9 @@
                     <td>@cuentaV.Nombre @cuentaV.Apellido</td>
                     <td>Viajero</td>
                     <td>@cuentaV.Id</td>
-                    <button class ="btn btn-dark" @onclick="()=>logCuenta(cuentaV.Id)">Ingresar</button>
-                    <button class="btn btn-warning"> Modificar</button>
-                    <button class="btn btn-danger" @onclick="()=>Eliminar(cuentaV.Id)">Eliminar</button>
+                    <td> <a class ="btn btn-dark" @onclick="()=>logCuenta(cuentaV.Id)" >Ingresar</a> </td>
+                    <td> <a class="btn btn-warning" href="/CuentasViajero/Editar/@cuentaV.Id">Modificar</a> </td>
+                    <td> <a class="btn btn-danger" @onclick="()=>Eliminar(cuentaV.Id)">Eliminar</a> </td>
                 </tr>
             }
            
@@ -45,9 +45,9 @@
                     <td>@item.Nombre</td>
                     <td>Hostel</td>
                     <td>@item.Id</td>
-                    <button class ="btn btn-secondary" @onclick="()=>logCuenta(item.Id)">Ingresar</button>
-                    <button class="btn btn-warning"> Modificar</button>
-                    <button class="btn btn-danger" @onclick="()=>Eliminar(item.Id)">Eliminar</button>
+                    <td> <a class ="btn btn-dark" @onclick="()=>logCuenta(item.Id)" >Ingresar</a> </td>
+                    <td> <a class="btn btn-warning" href="/CuentasHostel/Editar/@item.Id">Modificar</a> </td>
+                    <td> <a class="btn btn-danger" @onclick="()=>Eliminar(item.Id)">Eliminar</a> </td>
                 </tr>
             }
         }

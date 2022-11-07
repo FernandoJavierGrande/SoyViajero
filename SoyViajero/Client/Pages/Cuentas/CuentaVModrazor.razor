@@ -1,0 +1,52 @@
+﻿@page "/CuentasViajero/Editar/{IdCuenta}"
+@inject IHttpService http
+@inject NavigationManager nav
+
+<h3>Modificar cuenta de viajero</h3>
+
+<FormCuentaViajero cuentaViajero="cuentaV" onValidSubmit="Guardar" onCancel="Cancelar" txt_btn_ok="Modificar">
+
+</FormCuentaViajero>
+
+@code {
+    [Parameter]
+    public string IdCuenta { get; set; }
+    private CuentaViajero cuentaV = new CuentaViajero();
+
+    protected override async Task OnInitializedAsync()
+    {
+        base.OnInitializedAsync();
+
+        await ReadCuentaV();
+    }
+
+    private async Task ReadCuentaV()
+    {
+        var resp = await http.Get<CuentaViajero>($"/BuscarViajero/{IdCuenta}");
+        if (resp.Error)
+        {
+            var body = resp.HttpResponseMessage;
+            Cancelar();
+        }
+        else
+        {
+            cuentaV = resp.Respuesta;
+        }  
+    }
+
+
+    private async Task Guardar()
+    {
+        var resp = await http.Put<CuentaViajero>($"/EditarViajero{IdCuenta}",cuentaV);
+        if (resp.Error)
+        {
+            var body = resp.HttpResponseMessage;
+        }
+        Cancelar();
+    }
+
+
+    private void Cancelar(){
+        nav.NavigateTo("/Cuentas");
+    }
+}

@@ -13,7 +13,7 @@
 
     private async void Grabar()
     {
-        
+        cuentaHostel.Activo = true;
         var httpRespuesta = await http.Post<CuentaHostel>("/AgregarHostel", cuentaHostel); /*(no se si api/cuentas esta bien)*/
         if (httpRespuesta.Error)
         {
