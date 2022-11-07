@@ -140,7 +140,7 @@ namespace SoyViajero.Server.Controllers
         #endregion
 
         #region Delete
-        [HttpDelete("/eliminarCuentaViajero")]
+        [HttpDelete("/EliminarViajero")]
         public async Task<ActionResult> delete()
         {
             var CuentaViajero = User.Claims
@@ -168,6 +168,28 @@ namespace SoyViajero.Server.Controllers
             catch (Exception)
             {
                 return BadRequest("Ocurrio un error intente nuevamente");
+            }
+        }
+
+        [HttpDelete("/EliminarHostel/{IdCuenta}")]
+        public async Task<ActionResult> Delete(string IdCuenta)
+        {
+            var cuentaEliminar =  context.CuentasHostel.Where(x => x.Id == IdCuenta).FirstOrDefault();
+
+            if (cuentaEliminar == null)
+            {
+                return NotFound();
+            }
+            try
+            {
+                context.CuentasHostel.Remove(cuentaEliminar);
+                await context.SaveChangesAsync();
+                return Ok();
+            }
+            catch (Exception)
+            {
+
+                return BadRequest("no se pudo eliminar");
             }
         }
         #endregion

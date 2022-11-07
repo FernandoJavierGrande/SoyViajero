@@ -7,7 +7,7 @@
 <a class= "btn btn-primary" href="Cuentas/CrearHostel">Crear nueva cuenta de hostel</a>
 <a class= "btn btn-primary" href="Cuentas/CrearViajero">Crear nueva cuenta de viajero</a>
 
-<table class="table table-hover  table-sm">
+<table class="table">
     <thead>
         <tr>
             <th scope="col">Nombre</th>
@@ -33,6 +33,8 @@
                     <td>Viajero</td>
                     <td>@cuentaV.Id</td>
                     <button class ="btn btn-dark" @onclick="()=>logCuenta(cuentaV.Id)">Ingresar</button>
+                    <button class="btn btn-warning"> Modificar</button>
+                    <button class="btn btn-danger" @onclick="()=>Eliminar(cuentaV.Id)">Eliminar</button>
                 </tr>
             }
            
@@ -44,19 +46,34 @@
                     <td>Hostel</td>
                     <td>@item.Id</td>
                     <button class ="btn btn-secondary" @onclick="()=>logCuenta(item.Id)">Ingresar</button>
+                    <button class="btn btn-warning"> Modificar</button>
+                    <button class="btn btn-danger" @onclick="()=>Eliminar(item.Id)">Eliminar</button>
                 </tr>
             }
         }
     </tbody>
     
     </table>
+    <Confirmacion  @ref ="confirmacion"
+                verOk = "true"
+                verCancelar = "false"
+                textOk = "Aceptar"
+                onCancel = "Cerrar"
+                onConfirm = "Delete"
+                Titulo = "¿Eliminar cuenta?">
+                <div>
+                    ¿Desea eliminar la cuenta "@CuentaElim"?
+                </div>
+
+</Confirmacion>
 
 
 @code {
     List<CuentaHostel> cuentasH = new List<CuentaHostel>();
     CuentaViajero  cuentaV = new CuentaViajero();
     Usuario usuario = new Usuario();
-
+    Confirmacion confirmacion;
+    private string CuentaElim;
 
 
     protected override async Task OnInitializedAsync()
@@ -92,8 +109,41 @@
             Console.WriteLine("respuesta "+respuesta.Respuesta.ToString());
             navigationManager.NavigateTo("/Muro");
         }
-        
+
     }
+    private async Task Delete()
+    {
+        if (CuentaElim.Contains("v"))
+        {
+            var resp = await http.Delete($"/EliminarViajero");
+            if(resp.Error)
+            {
+                var body = "Error";
+            }
+            Cerrar();
+        }
+        else if(CuentaElim.Contains("h"))
+        {
+            var resp = await http.Delete($"/EliminarHostel/{CuentaElim}");
+            if(resp.Error)
+            {
+                var body = "Error";
+            }
+            Cerrar();
+        }
+    }
+    private void Eliminar(string idCuenta)
+    {
+        CuentaElim = idCuenta;
+        confirmacion.Ver();
+    }
+    private void Cerrar()
+    {
+        confirmacion.Ocultar();
+        CuentaElim = string.Empty;
+    }
+
+
 
 
 }
