@@ -76,16 +76,17 @@
 
     </Confirmacion>
 
+    
 
 @code {
     List<CuentaHostel> cuentasH = new List<CuentaHostel>();
     CuentaViajero  cuentaV = new CuentaViajero();
     Usuario usuario = new Usuario();
-    Confirmacion confirmacion, EliminacionUsuario;
+    Confirmacion confirmacion;
     private string mensajeConfirmacion, mensajeTitulo;
     private string CuentaElim;
     private bool banderaDelete;
-
+    
 
 
     protected override async Task OnInitializedAsync()
@@ -179,5 +180,7 @@
         banderaDelete = false;
         confirmacion.Ver();
     }
+
+   
 }
 

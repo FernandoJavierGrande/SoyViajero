@@ -39,9 +39,9 @@ namespace SoyViajero.Server.Controllers
             {
                 pass = ConvertirSha256(pass);
 
-                var User = context.Usuarios      // compara que las cuenta y la clave coincida
+                var User = await context.Usuarios      // compara que las cuenta y la clave coincida
                     .Where(x => x.NombreUser == usuario && x.Pass == pass)
-                    .FirstOrDefault();
+                    .FirstOrDefaultAsync();
 
                 //var User = await context.Usuarios.Where(x => x.NombreUser == usuario);
 

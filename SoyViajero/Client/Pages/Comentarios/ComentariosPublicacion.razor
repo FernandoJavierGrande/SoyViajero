@@ -4,6 +4,7 @@
 
 <table>
 <tr>
+    <td>Publicacion: </td>
     <td>@publicacion.Texto</td>
     <td>@publicacion.FechaCreacion</td>
     </tr>
@@ -15,10 +16,12 @@
         {
             @foreach (var item in comentarios)
             {
+
                 @if (item.PublicacionId == publicacionId)
                 {
+                    <td>@item.Nombre comentó:</td>
                     <td>@item.texto</td>
-                 <td>@item.FechaCreacion</td>                
+                    <td>@item.FechaCreacion</td>                
                 }
             }
         }
@@ -27,23 +30,113 @@
      </tr>
 </table>
 
+<ComentarPublicacion @ref="NuevoComentario"
+                verOk="true"
+                verCancelar="true"
+                textOk="Comentar"
+                onCancel="close"
+                onConfirm="EnviarComentario"
+                Titulo="comentar">
+
+                <input @bind=@texto/>
+
+ </ComentarPublicacion>
+
+ <button @onclick=@verCom>comentar</button>
+
 
 @code {
     [Parameter] public int publicacionId {get;set;}
-    List<Comentario> comentarios;
-    private Publicacion publicacion;
+    List<Comentario> comentarios = new List<Comentario>();
+    private Publicacion publicacion = new Publicacion();
+    private string texto = string.Empty;
+    private string nombre = string.Empty;
+    ComentarPublicacion NuevoComentario;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        await Leer();
+    }
+
 
     private async Task Leer()
     {
-        var respuesta = await http.Get<List<Comentario>>("api/Comentarios");
+        var respuesta = await http.Get<List<Comentario>>($"/Comentarios/{publicacionId}");
         if(!respuesta.Error)
         {
             comentarios = respuesta.Respuesta;
+
         }
-        var respuestaPublicacion = await http.Get<Publicacion>($"{publicacionId}");
+
+        var respuestaPublicacion = await http.Get<Publicacion>($"api/Publicacion/{publicacionId}");
         if(!respuesta.Error)
         {
-            publicacion = respuestaPublicacion.Respuesta;
+            publicacion = respuestaPublicacion.Respuesta;  
         }        
     }
+    private void close()
+    {
+        Console.WriteLine($"comentario: {texto}");
+
+        NuevoComentario.Ocultar();
+    }
+    private void verCom()
+    {
+        NuevoComentario.Ver();
+    }
+
+    private async Task EnviarComentario()
+    {
+        Comentario comentarioGuardar = new Comentario();
+
+        comentarioGuardar.FechaCreacion = DateTime.Now;
+        comentarioGuardar.PublicacionId = publicacionId;
+        comentarioGuardar.texto = texto.Trim();
+        comentarioGuardar.CuentasId = "-";
+
+        var resp = await http.Post<Comentario>($"api/Comentario", comentarioGuardar);
+        if (resp.Error)
+        {
+            var body = resp.HttpResponseMessage;
+        }
+        StateHasChanged();
+        close();
+
+    }
+    private async Task TraerCuenta(string id)
+    {
+        Console.WriteLine("entro a traer cuenta");
+
+        if (id.Contains("h"))
+        {
+            var resp = await http.Get<CuentaHostel>($"/BuscarHostel/{id}");
+            if (resp.Error)
+            {
+                var body = resp.HttpResponseMessage;
+
+            }
+            else
+            {
+                nombre = resp.Respuesta.Nombre;
+                StateHasChanged();
+            }
+        }
+        else
+        {
+            var resp = await http.Get<CuentaViajero>($"/BuscarViajero/{id}");
+            if (resp.Error)
+            {
+                var body = resp.HttpResponseMessage;
+            }
+            else
+            {
+                nombre = $"{resp.Respuesta.Nombre} {resp.Respuesta.Apellido}";
+                StateHasChanged();
+            }  
+        }
+    }
+
 }

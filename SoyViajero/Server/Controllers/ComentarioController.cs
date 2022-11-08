@@ -44,15 +44,38 @@ namespace SoyViajero.Server.Controllers
         }
             
 
-        [HttpGet("/Comentarios")]
-        public async Task<ActionResult<List<Comentario>>> Get()
+        [HttpGet("/Comentarios/{id:int}")]
+        public async Task<ActionResult<List<Comentario>>> GetId(int id)
         {
             try
             {
-                var cuentaActiva = User.Claims.Where(x => x.Type == "cuentaActiva").Select(c => c.Value).First();
+                //var cuentaActiva = User.Claims.Where(x => x.Type == "cuentaActiva").Select(c => c.Value).First();
+
                 var comentarios = await context.Comentarios
-                        .Where(x => x.CuentasId == cuentaActiva)
+                        .Where(x => x.PublicacionId == id)
                         .ToListAsync();
+
+                foreach (var comentario in comentarios)
+                {
+                    if (comentario.CuentasId.Contains("h"))
+                    {
+                        comentario.Nombre = await context.CuentasHostel
+                                        .Where(x=>x.Id == comentario.CuentasId)
+                                        .Select(x=>x.Nombre).FirstOrDefaultAsync();
+                    }
+                    else
+                    {
+                        comentario.Nombre = await context.CuentasViajeros
+                                            .Where(x => x.Id == comentario.CuentasId)
+                                            .Select(c => c.Nombre)
+                                            .FirstOrDefaultAsync();
+                        comentario.Nombre += await context.CuentasViajeros
+                                            .Where(x => x.Id == comentario.CuentasId)
+                                            .Select(c => c.Apellido)
+                                            .FirstOrDefaultAsync();
+                    }
+                }
+
                 return comentarios;
             }
             catch (Exception e)
@@ -65,7 +88,7 @@ namespace SoyViajero.Server.Controllers
 
         #region Post
         [HttpPost]
-        public async Task<ActionResult<int>> Post(Comentario coment)
+        public async Task<ActionResult<Comentario>> Post(Comentario coment)
         {
             try
             {
@@ -73,7 +96,7 @@ namespace SoyViajero.Server.Controllers
 
                 context.Comentarios.Add(coment);
                 await context.SaveChangesAsync();
-                return coment.ID;
+                return Ok(); 
             }
             catch (Exception e)
             {

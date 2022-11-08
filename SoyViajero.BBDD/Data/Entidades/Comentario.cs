@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +23,10 @@ namespace SoyViajero.BBDD.Data.Entidades
 
         //CuentasId
         [Required(ErrorMessage = "Cuenta es obligatorio")]
-        public string CuentasId { get; set; } 
+        public string CuentasId { get; set; }
+
+        [NotMapped]
+        public string Nombre { get; set; }
+
     }
 }
