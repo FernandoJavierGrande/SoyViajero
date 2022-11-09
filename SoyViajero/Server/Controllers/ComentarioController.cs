@@ -68,7 +68,7 @@ namespace SoyViajero.Server.Controllers
                         comentario.Nombre = await context.CuentasViajeros
                                             .Where(x => x.Id == comentario.CuentasId)
                                             .Select(c => c.Nombre)
-                                            .FirstOrDefaultAsync();
+                                            .FirstOrDefaultAsync() +" ";
                         comentario.Nombre += await context.CuentasViajeros
                                             .Where(x => x.Id == comentario.CuentasId)
                                             .Select(c => c.Apellido)
