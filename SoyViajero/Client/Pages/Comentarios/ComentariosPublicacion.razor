@@ -1,6 +1,6 @@
 ﻿@page "/Muro/Comentarios/{publicacionId:int}"
 @inject IHttpService http
-<h3>ComentariosPublicacion</h3>
+<h3>Comentarios</h3>
 
 <table>
     <tr>
@@ -27,16 +27,13 @@
          <div class="form-control">
              @if (item.PublicacionId == publicacionId)
         {
-             <label> El @item.FechaCreacion.ToShortDateString() @item.Nombre comentó: </label>
+             <label> El @item.FechaCreacion.ToShortDateString() "@item.Nombre" comentó: </label>
              <label>@item.texto </label>
              
          }
          </div>
      }
  }
-        
-
-     
 
 
 <ComentarPublicacion @ref="NuevoComentario"
@@ -86,16 +83,9 @@
             publicacion = respuestaPublicacion.Respuesta;  
         }        
     }
-    private void close()
-    {
-        Console.WriteLine($"comentario: {texto}");
-
-        NuevoComentario.Ocultar();
-    }
-    private void verCom()
-    {
-        NuevoComentario.Ver();
-    }
+    private void close() => NuevoComentario.Ocultar();
+    
+    private void verCom() => NuevoComentario.Ver();
 
     private async Task EnviarComentario()
     {
