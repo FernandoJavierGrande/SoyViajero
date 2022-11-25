@@ -86,7 +86,6 @@
     private string mensajeConfirmacion, mensajeTitulo;
     private string CuentaElim;
     private bool banderaDelete;
-    
 
 
     protected override async Task OnInitializedAsync()
@@ -115,7 +114,16 @@
         var respuesta = await http.Get<int>($"api/Login/{Id}");
         if (!respuesta.Error)
         {
-            navigationManager.NavigateTo("/Muro");
+            //if (Id.Contains("h"))
+            //{
+            //    navigationManager.NavigateTo($"/PerfilHostel/{Id}");
+            //}
+            //else
+            //{
+            //    navigationManager.NavigateTo($"/PerfilViajero/{Id}");
+            //}
+            navigationManager.NavigateTo("/Perfil");
+
         }
         else
         {

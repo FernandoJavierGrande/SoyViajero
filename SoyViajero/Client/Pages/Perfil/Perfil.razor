@@ -1,0 +1,131 @@
+﻿@inject IHttpService http
+@page "/Perfil"
+<h3>Perfil</h3>
+
+@if (cuentaHostelLogueada != null)
+{
+    <div class ="card-deck">
+        <div class="card">
+            <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                @cuentaHostelLogueada.Nombre
+            </li>
+            <li class="list-group-item">
+                @cuentaHostelLogueada.Pais
+            </li>
+            <li class="list-group-item">
+                @cuentaHostelLogueada.Provincia
+            </li>
+            <li class="list-group-item">
+                @cuentaHostelLogueada.Ciudad
+            </li>
+            <li class="list-group-item">
+                @cuentaHostelLogueada.Descripcion
+            </li>
+            <li class="list-group-item">
+                @cuentaHostelLogueada.Telefono
+            </li>
+            <li class="list-group-item">
+                @cuentaHostelLogueada.Mail
+            </li>
+            </ul>
+        </div>
+    </div>
+}
+else if (cuentaViajeroLogueada != null)
+{
+    <div class ="card-deck">
+        <div class="card">
+            <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                @cuentaViajeroLogueada.Nombre
+            </li>
+            <li class="list-group-item">
+                @cuentaViajeroLogueada.Apellido
+            </li>
+            <li class="list-group-item">
+                @cuentaViajeroLogueada.Edad
+            </li>
+            <li class="list-group-item">
+                @cuentaViajeroLogueada.Pais
+            </li>
+            <li class="list-group-item">
+                @cuentaViajeroLogueada.Provincia
+            </li>
+            <li class="list-group-item">
+                @cuentaViajeroLogueada.Ciudad
+            </li>
+            <li class="list-group-item">
+                @cuentaViajeroLogueada.Descripcion
+            </li>
+
+            </ul>
+        </div>
+    </div>
+}
+else
+{
+    <h3>No hay ninguna cuenta logueada</h3>
+}
+
+@if (publicaciones != null)
+{
+    <h2>Publicaciones</h2>
+    <div class="card" style="width: 40rem;">
+
+    @foreach(var item in publicaciones)
+    {
+        <ul class="list-group list-group-flush">
+        <li class="list-group-item">@item.fotoPublicacion</li>
+        <li class="list-group-item">@item.Texto</li> 
+        </ul>
+    }
+    </div>  
+}
+
+@code {
+    private CuentaHostel cuentaHostelLogueada = new CuentaHostel();
+    private CuentaViajero cuentaViajeroLogueada = new CuentaViajero();
+    private List<Publicacion> publicaciones = new List<Publicacion>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        await readPublicaciones();
+        await readCuenta();
+
+    }
+    private async Task readCuenta()
+    {
+        foreach (var item in publicaciones)
+        {
+            if (item.CuentasId.Contains("h"))
+            {
+                var respuesta = await http.Get<CuentaHostel>($"/BuscarHostel/{item.CuentasId}");
+                if (!respuesta.Error)
+                {
+                    cuentaHostelLogueada = respuesta.Respuesta;
+                }                
+            } 
+            else
+            {
+                var respuesta = await http.Get<CuentaViajero>($"/BuscarViajero/{item.CuentasId}");
+                if (!respuesta.Error)
+                {
+                    cuentaViajeroLogueada = respuesta.Respuesta;
+                }                
+            } 
+        }  
+
+    }    
+    private async Task readPublicaciones()
+    {
+        var respuesta = await http.Get<List<Publicacion>>("/Publicaciones");
+        if (!respuesta.Error)
+        {
+            publicaciones = respuesta.Respuesta;
+
+        }
+    }
+}
