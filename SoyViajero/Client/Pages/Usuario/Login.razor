@@ -1,17 +1,17 @@
-﻿@page "/"
+﻿@page "/Login"
 @inject IHttpService http
 @inject NavigationManager navigationManager
 
-<h3>Login</h3>
+<h3>Ingresar</h3>
 
 <LoginForm usuario="usuario" onValidSubmit="Loguearse">
 
 </LoginForm>
 
 <div class="form-control">
-    <label > Si no posee cuenta puede registrarse</label>
+    <label >¿No tenes cuenta? ¡Registrate!</label>
     <div>
-        <a class="btn btn-secondary" href="Usuario/Crear"> Crear Usuario</a>
+        <a class="btn btn-secondary" href="Usuario/Crear">Crear usuario</a>
     </div>
 </div>
 

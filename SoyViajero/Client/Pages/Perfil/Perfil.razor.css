@@ -1,0 +1,50 @@
+﻿.content {
+    top: 5rem;
+    position: relative;
+    margin: auto;
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.cardPerfil {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 13rem;
+    margin-bottom: 1rem;
+}
+.foto {
+    width: 13em;
+    height: 100%;
+    border-radius: 50%;
+    background-image: url("https://upload.wikimedia.org/wikipedia/commons/e/e8/Hostel_Dormitory.jpg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+.cardDatos {
+    background-color: #FFFFFF;
+    border-radius: 15px;
+    padding: 0.5em;
+    width: 70%;
+    height: 100%;
+    font-size: 14px;
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.nombreCta {
+    font-weight: bolder;
+    font-size:16px;
+}
+.datoImp {
+    font-weight: bold;
+}
+.sobreNtros{
+    font-style:italic;
+}
+.prf{
+    margin-bottom: 0px;
+}

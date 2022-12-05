@@ -1,4 +1,4 @@
-﻿@page "/Muro/CrearPublicacion"
+﻿@page "/CrearPublicacion"
 @inject IHttpService http
 @inject NavigationManager navigationManager
 
@@ -19,11 +19,11 @@
             var body = httpRespuesta.HttpResponseMessage;
         }
         StateHasChanged();
-        navigationManager.NavigateTo("/Muro");
+        navigationManager.NavigateTo("/");
     }
     private void Cancelar()
     {
-        navigationManager.NavigateTo("/Muro");
+        navigationManager.NavigateTo("/");
 
     }
 }

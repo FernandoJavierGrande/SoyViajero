@@ -1,60 +1,42 @@
-﻿@page "/Muro"
+﻿@page "/"
 @inject IHttpService http
 
-<h3>Muro</h3>
+<div class="content">
+    <BotonPublicacion></BotonPublicacion>
+    <table>
 
-<a class="btn btn-primary" href="Muro/CrearPublicacion">
-    <span class="oi oi-plus" aria-hidden="true"></span>
-    Nueva publicacion
-    </a>
-
-<table>
-
-    @if (publicaciones == null)
-    {
-        <tr>Cargando...</tr>
-    }
-    else if(publicaciones.Count == 0)
-    {
-        <tr>Todavía no hay publicaciones</tr>
-    }
-    else
-    {
-        @foreach (var item in publicaciones)
+        @if (publicaciones == null)
         {
-            <tr>
-                <td>@item.Texto</td>
-                <td>@item.FechaCreacion</td>
-                <td>
-                    <a class="btn btn-primary"
-                       href="Muro/Comentarios/@item.ID" style="width:40%; margin-top:1rem;">
-                        Ver comentarios
-                    </a>
-                </td>
-            </tr>
+            <tr>Cargando...</tr>
         }
-    }
-</table>
-
-@*<Confirmacion @ref="confirmacion"
-              verCancelar="true"
-              verOk="true"
-              textOk="Ok"
-              Titulo="Borrar especialidad"
-              onCancel="Cancelar"
-              onConfirm="Borrar"
->
-              <div>
-                  Está por borrar la publicación de ID @PublicacionBorrar.ID
-                  <br/>
-                  ¿Está seguro que desea continuar?
-              </div>
-</Confirmacion>*@
+        else if(publicaciones.Count == 0)
+        {
+            <tr>Todavía no hay publicaciones</tr>
+        }
+        else
+        {
+            @foreach (var item in publicaciones)
+            {
+@*                <tr>
+                    <td>@item.Texto</td>
+                    <td>@item.FechaCreacion</td>
+                    <td>
+                        <a class="btn btn-primary"
+                           href="Muro/Comentarios/@item.ID" style="width:40%; margin-top:1rem;">
+                            Ver comentarios
+                        </a>
+                    </td>
+                </tr>*@
+                <Publicac publicacion="@item"></Publicac>
+            }
+        }
+    </table>
+</div>
 
 
 @code {
     List<Publicacion> publicaciones = new List<Publicacion>();
-    Confirmacion confirmacion;
+    //Confirmacion confirmacion;
     Publicacion PublicacionBorrar = new Publicacion();
 
 
@@ -73,17 +55,17 @@
         }
     }
 
-    private void Eliminar(Publicacion publicacionBorrar)
-    {
-        PublicacionBorrar = publicacionBorrar;
-        confirmacion.Ver();
-    }
+    //private void Eliminar(Publicacion publicacionBorrar)
+    //{
+    //    PublicacionBorrar = publicacionBorrar;
+    //    confirmacion.Ver();
+    //}
 
-    private void Cancelar()
-    {
-        confirmacion.Ocultar();
-        PublicacionBorrar = null;
-    }
+    //private void Cancelar()
+    //{
+    //    confirmacion.Ocultar();
+    //    PublicacionBorrar = null;
+    //}
 
     //private async Task Borrar()
     //{

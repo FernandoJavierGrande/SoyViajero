@@ -1,0 +1,141 @@
+﻿@inject IHttpService http
+@page "/Perfil"
+<div class="content">
+    @if (cuentaHostelLogueada != null)
+    {
+        <div class="cardPerfil">
+            <div class="foto"></div>
+            <div class="cardDatos">
+                <span>Somos <span class="nombreCta">@cuentaHostelLogueada.Nombre</span></span>
+                <div class="datosHostel">
+                    <p class="prf">
+                        Estamos en <span class="datoImp">@cuentaHostelLogueada.Ciudad, @cuentaHostelLogueada.Provincia, @cuentaHostelLogueada.Pais</span>
+                        <br/>
+                        Nos podes contactar por nuestro mail: <span class="datoImp">@cuentaHostelLogueada.Mail</span>
+                        <br/>
+                        O llamarnos al: <span class="datoImp">@cuentaHostelLogueada.Telefono</span>
+                        <br/>
+                        <span class="sobreNtros">Sobre nosotros</span>
+                        <br/>
+                        @cuentaHostelLogueada.Descripcion
+                    </p>
+                </div>
+            </div>
+        </div>
+    }
+    
+    else if (cuentaViajeroLogueada != null)
+    {
+@*        <div class ="card-deck">
+            <div class="card">
+                <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    @cuentaViajeroLogueada.Nombre
+                </li>
+                <li class="list-group-item">
+                    @cuentaViajeroLogueada.Apellido
+                </li>
+                <li class="list-group-item">
+                    @cuentaViajeroLogueada.Edad
+                </li>
+                <li class="list-group-item">
+                    @cuentaViajeroLogueada.Pais
+                </li>
+                <li class="list-group-item">
+                    @cuentaViajeroLogueada.Provincia
+                </li>
+                <li class="list-group-item">
+                    @cuentaViajeroLogueada.Ciudad
+                </li>
+                <li class="list-group-item">
+                    @cuentaViajeroLogueada.Descripcion
+                </li>
+
+                </ul>
+            </div>
+        </div>*@
+
+            <div class="cardPerfil">
+            <div class="foto"></div>
+            <div class="cardDatos">
+                <span>Soy <span class="nombreCta">@cuentaViajeroLogueada.Nombre @cuentaViajeroLogueada.Apellido</span></span>
+                <div class="datosHostel">
+                    <p class="prf">
+                        Tengo <span class="datoImp"> @cuentaViajeroLogueada.Edad años</span>
+                        <br/>
+                        Soy de <span class="datoImp">@cuentaViajeroLogueada.Ciudad, @cuentaViajeroLogueada.Provincia, @cuentaViajeroLogueada.Pais</span>
+                        <br/>
+                        <span class="sobreNtros">Sobre mi</span>
+                        <br/>
+                        @cuentaViajeroLogueada.Descripcion
+                    </p>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <h3 style="text-align: center;">No hay ninguna cuenta logueada</h3>
+    }
+    @if (cuentaHostelLogueada != null || cuentaViajeroLogueada != null)
+    {
+        <BotonPublicacion></BotonPublicacion>    
+    }
+
+    
+    @if (publicaciones != null)
+    {
+        @foreach(var item in publicaciones)
+        {
+            <Publicac publicacion="@item"></Publicac>
+        }
+    }
+</div>
+
+
+@code {
+    private CuentaHostel cuentaHostelLogueada; 
+    private CuentaViajero cuentaViajeroLogueada; 
+    private List<Publicacion> publicaciones = new List<Publicacion>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        await readPublicaciones();
+        await readCuenta();
+
+    }
+    private async Task readCuenta()
+    {
+        foreach (var item in publicaciones)
+        {
+            if (item.CuentasId.Contains("h"))
+            {
+                var respuesta = await http.Get<CuentaHostel>($"/BuscarHostel/{item.CuentasId}");
+                if (!respuesta.Error)
+                {
+                    cuentaHostelLogueada = respuesta.Respuesta;
+                }                
+            } 
+            else if (item.CuentasId.Contains("v"))
+            {
+                var respuesta = await http.Get<CuentaViajero>($"/BuscarViajero/{item.CuentasId}");
+                if (!respuesta.Error)
+                {
+                    cuentaViajeroLogueada = respuesta.Respuesta;
+                }                
+            } 
+        }  
+
+    }    
+    private async Task readPublicaciones()
+    {
+        var respuesta = await http.Get<List<Publicacion>>("/Publicaciones");
+        if (!respuesta.Error)
+        {
+            publicaciones = respuesta.Respuesta;
+
+        }
+    }
+}
