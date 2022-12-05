@@ -1,0 +1,33 @@
+﻿.btn {
+    background-color: #FFF;
+    display: flex;
+    justify-content: space-between;
+    width: 25em;
+    align-items:center;
+    margin-top: 1em;
+    border-radius:10px;
+}
+.btn:focus{
+    outline:none;
+}
+.inconoTexto{
+    display:flex;
+    align-items:center;
+}
+.bi bi-file-earmark-text {
+    margin-right: 0.5em;
+}
+.containerText {
+    color: #FDC830;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left:0.5em;
+}
+.primerTexto{
+    font-size: 18px;
+    font-weight: bold;
+}
+.segundoTexto{
+    font-size: 12px;
+}

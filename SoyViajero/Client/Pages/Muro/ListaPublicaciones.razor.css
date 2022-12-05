@@ -1,0 +1,9 @@
+﻿.content {
+    top: 5rem;
+    position: relative;
+    margin: auto;
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}

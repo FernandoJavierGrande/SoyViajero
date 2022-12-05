@@ -47,7 +47,7 @@ namespace SoyViajero.Server.Controllers
 
 
                 if (User == null) // si no devuelve nada es porque no coincide
-                    return BadRequest("El usuario o contraseña no son correctos ");
+                    return BadRequest("El usuario o la contraseña no son correctos");
 
 
                 var cuentasH = await context.CuentasHostel // busca las cuentas de hostel que tenga registradas
@@ -201,7 +201,7 @@ namespace SoyViajero.Server.Controllers
             catch (Exception e )
             {
                 
-                return BadRequest(" +++ Error, vuelva a intentar " +e); //borrar
+                return BadRequest("Error, vuelva a intentar " +e); //borrar
             }
         }
 
