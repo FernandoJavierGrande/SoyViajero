@@ -1,0 +1,106 @@
+﻿@page "/SeleccionCuenta"
+@inject IHttpService http
+
+<header>
+    <h1>Soy Viajero</h1>
+    <h2>Seleccione su cuenta</h2>
+</header>
+
+
+@*<div class="card-deck">
+     @if(CuentasHostel == null && CuentasViajero == null)
+    {
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Cargando...</h5>
+            </div>
+        </div>        
+    } else if (CuentasHostel.Count == 0 && CuentasViajero.Count == 0){
+           <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">No hay cuentas para seleccionar</h5>
+            </div>
+        </div>   
+    }
+    else
+    {
+        @foreach (var item in CuentasViajero)
+        {
+            <div class="card">
+                <img class="card-img-top" src="@item.FotoPerfil" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">@item.Nombre</h5>
+                </div>
+            </div>
+        }
+        @foreach (var item in CuentasHostel)
+        {
+            <div class="card">
+                <img class="card-img-top" src="@item.FotoPerfil" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">@item.Nombre</h5>
+                </div>
+            </div>
+        }
+    }*@
+
+
+
+<table>
+    <tr>
+        <th>Cuentas hostel</th>
+    </tr>
+    
+    @if(CuentasHostel == null)
+    {
+        <tr>Cargando...</tr>
+    } else if (CuentasHostel.Count == 0){
+        <tr>No hay especialidades cargadas al sistema</tr>
+    }
+    else
+    {
+        @foreach (var item in CuentasHostel)
+        {
+            <tr>
+                <td>@item.Nombre</td>
+                <td>@item.Ciudad</td>
+            </tr>
+        }
+    }
+
+</table>
+
+
+
+
+
+  @*<div class="card">
+    <img class="card-img-top" src="..." alt="Card image cap">
+    <div class="card-body">
+      <h5 class="card-title">Card title</h5>
+      <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+      <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+    </div>
+  </div>
+  <div class="card">
+    <img class="card-img-top" src="..." alt="Card image cap">
+    <div class="card-body">
+      <h5 class="card-title">Card title</h5>
+      <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
+      <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+    </div>
+  </div>
+  <div class="card">
+    <img class="card-img-top" src="..." alt="Card image cap">
+    <div class="card-body">
+      <h5 class="card-title">Card title</h5>
+      <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
+      <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+    </div>
+  </div>
+</div>
+*@
+@code {
+    List<CuentaViajero> CuentasViajero;
+    List<CuentaHostel> CuentasHostel;
+}
