@@ -23,7 +23,7 @@ namespace SoyViajero.Server.Controllers
         public LoginController(Context context) => this.context = context;
 
 
-        [HttpGet("/Buscar/{NombreUser}")]
+        [HttpGet("Buscar/{NombreUser}")]
         public async Task<ActionResult<bool>> Disp(string NombreUser)
         {
             var resp = await context.Usuarios.AnyAsync(x => x.NombreUser == NombreUser);
@@ -116,7 +116,26 @@ namespace SoyViajero.Server.Controllers
             {
                 return BadRequest("El usuario o contraseña no son correctos ");
             }
+        
         }
+
+        [HttpGet("Consulta")]
+        public ActionResult<Usuario> logueado()
+        {
+            Usuario resp = new Usuario();
+            var claims = User.Claims.ToList();
+            resp.NombreUser = "null";
+            foreach (var item in claims)
+            {
+                if (item.Type.Contains("cuentaActiva"))
+                {
+                    resp.NombreUser = item.Value;
+                    return resp;
+                }
+            }
+            return resp;
+        }
+
         #endregion
 
         #region cambiarCuenta

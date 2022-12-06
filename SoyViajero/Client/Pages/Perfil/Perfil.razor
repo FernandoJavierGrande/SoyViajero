@@ -1,7 +1,7 @@
 ﻿@inject IHttpService http
-@page "/Perfil"
+@page "/Perfil/{IdCuenta}"
 <div class="content">
-    @if (cuentaHostelLogueada != null)
+    @if (banderaCuenta)
     {
         <div class="cardPerfil">
             <div class="foto"></div>
@@ -24,7 +24,7 @@
         </div>
     }
     
-    else if (cuentaViajeroLogueada != null)
+    else if (!banderaCuenta)
     {
 @*        <div class ="card-deck">
             <div class="card">
@@ -73,12 +73,13 @@
             </div>
         </div>
     }
-    else
+    else if(!logueado)
     {
         <h3 style="text-align: center;">No hay ninguna cuenta logueada</h3>
     }
-    @if (cuentaHostelLogueada != null || cuentaViajeroLogueada != null)
+    @if (logueado && publicaciones.Count<1)
     {
+        <h3 style="text-align: center;">No hay ninguna publicación</h3>
         <BotonPublicacion></BotonPublicacion>    
     }
 
@@ -94,38 +95,46 @@
 
 
 @code {
-    private CuentaHostel cuentaHostelLogueada; 
-    private CuentaViajero cuentaViajeroLogueada; 
+    private CuentaHostel cuentaHostelLogueada;
+    private CuentaViajero cuentaViajeroLogueada = new CuentaViajero();
+    private bool logueado = false, banderaCuenta;
+
+    [Parameter]
+    public string IdCuenta { get; set; } = string.Empty; 
+
     private List<Publicacion> publicaciones = new List<Publicacion>();
 
     protected override async Task OnInitializedAsync()
     {
+        await cuenta();
+
         await base.OnInitializedAsync();
 
+        
         await readPublicaciones();
         await readCuenta();
 
     }
     private async Task readCuenta()
     {
-        foreach (var item in publicaciones)
-        {
-            if (item.CuentasId.Contains("h"))
+            if (IdCuenta.Contains("h"))
             {
-                var respuesta = await http.Get<CuentaHostel>($"/BuscarHostel/{item.CuentasId}");
+                var respuesta = await http.Get<CuentaHostel>($"/BuscarHostel/{IdCuenta}");
                 if (!respuesta.Error)
                 {
                     cuentaHostelLogueada = respuesta.Respuesta;
+                    banderaCuenta = true;
                 }                
             } 
-            else if (item.CuentasId.Contains("v"))
+            else if (IdCuenta.Contains("v"))
             {
-                var respuesta = await http.Get<CuentaViajero>($"/BuscarViajero/{item.CuentasId}");
+                var respuesta = await http.Get<CuentaViajero>($"/BuscarViajero/{IdCuenta}");
                 if (!respuesta.Error)
                 {
                     cuentaViajeroLogueada = respuesta.Respuesta;
+                    banderaCuenta = false;
                 }                
-            } 
+            
         }  
 
     }    
@@ -136,6 +145,14 @@
         {
             publicaciones = respuesta.Respuesta;
 
+        }
+    }
+    private async Task cuenta()
+    {
+        var res = await http.Get<Usuario>("api/Login/Consulta");
+        if (!res.Error && !res.Respuesta.NombreUser.Equals("null"))
+        {
+            logueado = true;
         }
     }
 }

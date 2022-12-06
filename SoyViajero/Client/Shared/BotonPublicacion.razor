@@ -22,60 +22,40 @@
 </button>
 
 @code {
-    private void redirect()
+    private async Task redirect()
     {
-        if (cuentaHostelLogueada == null && cuentaViajeroLogueada == null)
+        await cuenta();
+        if (!logueado)
         {
+            
             navigationManager.NavigateTo("/Login");
         }
         else
         {
-           navigationManager.NavigateTo("/CrearPublicacion"); 
+            navigationManager.NavigateTo("/CrearPublicacion"); 
         }
-        
+
     }
     private CuentaHostel cuentaHostelLogueada; 
     private CuentaViajero cuentaViajeroLogueada; 
     private List<Publicacion> publicaciones = new List<Publicacion>();
+    private bool logueado;
 
     protected override async Task OnInitializedAsync()
     {
+        logueado = false;
         await base.OnInitializedAsync();
 
-        await readPublicaciones();
-        await readCuenta();
-
     }
-    private async Task readCuenta()
+    private async Task cuenta()
     {
-        foreach (var item in publicaciones)
+        var res = await http.Get<Usuario>("api/Login/Consulta");
+        if (!res.Error && res.Respuesta.NombreUser != "null")
         {
-            if (item.CuentasId.Contains("h"))
             {
-                var respuesta = await http.Get<CuentaHostel>($"/BuscarHostel/{item.CuentasId}");
-                if (!respuesta.Error)
-                {
-                    cuentaHostelLogueada = respuesta.Respuesta;
-                }                
-            } 
-            else if (item.CuentasId.Contains("v"))
-            {
-                var respuesta = await http.Get<CuentaViajero>($"/BuscarViajero/{item.CuentasId}");
-                if (!respuesta.Error)
-                {
-                    cuentaViajeroLogueada = respuesta.Respuesta;
-                }                
-            } 
-        }  
-
-    }    
-    private async Task readPublicaciones()
-    {
-        var respuesta = await http.Get<List<Publicacion>>("/Publicaciones");
-        if (!respuesta.Error)
-        {
-            publicaciones = respuesta.Respuesta;
-
+                logueado = true;
+            }
         }
     }
+    
 }
