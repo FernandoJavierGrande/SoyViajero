@@ -1,0 +1,42 @@
+﻿.formLogin {
+    background-color: #fff !important;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 40%;
+    height: 20rem;
+}
+.containter {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+}
+.btnIngresar {
+    width: 80%;
+    border: none;
+    border-radius: 10px;
+    background-color: #FDC830;
+    padding: 0.2em;
+    font-weight: bolder;
+    color: #FFFFFF;
+}
+.containterRegistro {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    font-size: 16px;
+}
+.btnRegistro {
+    border: none;
+    border-radius: 10px;
+    background-color: #F37335;
+    padding: 0.2em;
+    font-weight: bolder;
+    color: #FFFFFF;
+}

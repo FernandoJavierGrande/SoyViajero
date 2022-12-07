@@ -1,37 +1,41 @@
-﻿<EditForm Model="usuario" OnValidSubmit="onValidSubmit">
+﻿<EditForm Model="usuario" OnValidSubmit="onValidSubmit" class="formLogin">
 
     <DataAnnotationsValidator/>
-    <div class="form-group">
+    <div class="container">
             <label>Nombre</label>
-            <div>
-                <InputText class="form-control" @bind-Value="usuario.NombreUser"/>
-                <ValidationMessage For="@(() => usuario.NombreUser)"/>
-
-            </div>
+            <InputText class="inputLogin" @bind-Value="usuario.NombreUser" />
+            <ValidationMessage For="@(() => usuario.NombreUser)"/>
     </div>
-
-    <div class="form-group">
+    <div class="container">
             <label>Mail</label>
-            <div>
-                <InputText class="form-control" @bind-Value="@usuario.Mail"/>
-                <ValidationMessage For="@(() => usuario.Mail)"/>
-
-            </div>
+            <InputText class="inputLogin" @bind-Value="@usuario.Mail"/>
+            <ValidationMessage For="@(() => usuario.Mail)"/>
     </div>
-
-        <div class="form-group">
+    <div class="container">
             <label>Contraseña</label>
-            <div>
-                <InputText class="form-control" @bind-Value="@usuario.Pass"/>
-                <ValidationMessage For="@(() => usuario.Pass)"/>
-
-            </div>
+            <InputText class="inputLogin" @bind-Value="@usuario.Pass"/>
+            <ValidationMessage For="@(() => usuario.Pass)"/>
     </div>
 
 
-    <button class="btn btn-primary" type="submit">Aceptar</button>
-    <button class="btn btn-secondary" @onclick="onCancel">Cancelar</button>
+    <button class="btnRegistro" type="submit">Aceptar</button>
+    <button class="btnCancelar" @onclick="onCancel">Cancelar</button>
 </EditForm>
+
+
+@*        <div class="containter">
+            <label>Usuario</label>
+            <InputText type="text" class="inputLogin" placeholder="Usuario" @bind-Value=@usuario.NombreUser/>
+        </div>
+        <div class="containter">
+            <label>Contraseña</label>
+            <InputText type="password" class="inputLogin" placeholder="Contraseña" @bind-Value=@usuario.Pass/>
+        </div>
+        <button class="btnIngresar" type="submit">Ingresar</button>
+        <div class="containterRegistro">
+            <label class="lblRegistro">¿No tenes cuenta? ¡Regístrate!</label>
+            <button class="btnRegistro" @onclick="redirectRegistro">Crear cuenta</button>
+        </div>  *@
 
 @code {
     [Parameter] public Usuario usuario { get; set; }

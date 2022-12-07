@@ -2,19 +2,16 @@
 @inject IHttpService http
 @inject NavigationManager navigationManager
 
-<h3>Ingresar</h3>
 
-<LoginForm usuario="usuario" onValidSubmit="Loguearse">
-
-</LoginForm>
-
-<div class="form-control">
+<div class="content">   
+    <LoginForm usuario="usuario" onValidSubmit="Loguearse"></LoginForm>
+</div>
+@*<div class="form-control">
     <label >¿No tenes cuenta? ¡Registrate!</label>
     <div>
         <a class="btn btn-secondary" href="Usuario/Crear">Crear usuario</a>
     </div>
-</div>
-
+</div>*@
 <Confirmacion  @ref ="confirmacion"
                 verOk = "true"
                 verCancelar = "false"
@@ -27,7 +24,6 @@
                 </div>
 
 </Confirmacion>
-
 
 @code {
     private Usuario usuario = new Usuario();

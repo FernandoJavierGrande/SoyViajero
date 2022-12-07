@@ -1,22 +1,27 @@
-﻿<EditForm Model="usuario" OnValidSubmit="onValidSubmit">
-    <div class="form-control">
-        <label>Usuario</label>
-        <div>
-            <InputText type="text" class="form-control" placeholder="Usuario" @bind-Value=@usuario.NombreUser/>
+﻿@inject NavigationManager navigationManager
+
+<EditForm Model="usuario" OnValidSubmit="onValidSubmit" class="formLogin">
+        <div class="containter">
+            <label>Usuario</label>
+            <InputText type="text" class="inputLogin" placeholder="Usuario" @bind-Value=@usuario.NombreUser/>
         </div>
-        
-        <label>Contraseña</label>
-        <div>
-            <InputText type="password" class="form-control" placeholder="Contraseña" @bind-Value=@usuario.Pass/>
+        <div class="containter">
+            <label>Contraseña</label>
+            <InputText type="password" class="inputLogin" placeholder="Contraseña" @bind-Value=@usuario.Pass/>
         </div>
-        <div>
-            <button class="btn btn-primary" type="submit"> Ingresar</button>
-        </div>
-</div>
+        <button class="btnIngresar" type="submit">Ingresar</button>
+        <div class="containterRegistro">
+            <label class="lblRegistro">¿No tenes cuenta? ¡Regístrate!</label>
+            <button class="btnRegistro" @onclick="redirectRegistro">Crear cuenta</button>
+        </div>  
 </EditForm>
 
 @code {
     [Parameter] public Usuario usuario { get; set; } = new Usuario();
     [Parameter] public EventCallback onValidSubmit { get; set; }
+    public void redirectRegistro()
+    {
+        navigationManager.NavigateTo("/Usuario/Crear");
+    }
 }
 

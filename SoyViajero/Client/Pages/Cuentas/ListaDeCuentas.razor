@@ -2,64 +2,65 @@
 @inject IHttpService http
 @inject NavigationManager navigationManager
 
+<div class="content">
+    <a class= "btn btn-primary" href="Cuentas/CrearHostel">Crear nueva cuenta de hostel</a>
+    <a class= "btn btn-primary" href="Cuentas/CrearViajero">Crear nueva cuenta de viajero</a>
 
-<h3>Lista De Cuentas</h3>
-<a class= "btn btn-primary" href="Cuentas/CrearHostel">Crear nueva cuenta de hostel</a>
-<a class= "btn btn-primary" href="Cuentas/CrearViajero">Crear nueva cuenta de viajero</a>
-
-<table class="table table-hover">
-    <thead>
-        <tr>
-            <th scope="col">Nombre</th>
-            <th scope="col">Tipo de cuenta</th> 
-            @*<th scope="col"> </th>*@
-            <th scope="col"> </th>
-            <th scope="col"> </th>
-            <th scope="col"> </th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (cuentasH == null && cuentaV ==null)
-        {
-            <tr>Cargando</tr>
-        }
-        else if (cuentasH.Count == 0 && cuentaV == null)
-        {
-            <tr>No hay datos disponibles</tr>
-        }
-        else
-        {
-            @if (cuentaV!=null)
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Nombre</th>
+                <th scope="col">Tipo de cuenta</th> 
+                @*<th scope="col"> </th>*@
+                <th scope="col"> </th>
+                <th scope="col"> </th>
+                <th scope="col"> </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (cuentasH == null && cuentaV ==null)
             {
-                <tr>
-                    <td>@cuentaV.Nombre @cuentaV.Apellido</td>
-                    <td>Viajero</td>
-                    <td> <a class ="btn btn-dark" @onclick="()=>logCuenta(cuentaV.Id)" >Ingresar</a> </td>
-                    <td> <a class="btn btn-warning" href="/CuentasViajero/Editar/@cuentaV.Id">Modificar</a> </td>
-                    <td> <a class="btn btn-danger" @onclick="()=>Eliminar(cuentaV.Id)">Eliminar</a> </td>
-                </tr>
+                <tr>Cargando</tr>
             }
+            else if (cuentasH.Count == 0 && cuentaV == null)
+            {
+                <tr>No hay datos disponibles</tr>
+            }
+            else
+            {
+                @if (cuentaV!=null)
+                {
+                    <tr>
+                        <td>@cuentaV.Nombre @cuentaV.Apellido</td>
+                        <td>Viajero</td>
+                        <td> <a class ="btn btn-dark" @onclick="()=>logCuenta(cuentaV.Id)" >Ingresar</a> </td>
+                        <td> <a class="btn btn-warning" href="/CuentasViajero/Editar/@cuentaV.Id">Modificar</a> </td>
+                        <td> <a class="btn btn-danger" @onclick="()=>Eliminar(cuentaV.Id)">Eliminar</a> </td>
+                    </tr>
+                }
            
 
-            @foreach (var item in cuentasH)
-            {
-                <tr>
-                    <td>@item.Nombre</td>
-                    <td>Hostel</td>
-                    <td> <a class ="btn btn-dark" @onclick="()=>logCuenta(item.Id)" >Ingresar</a> </td>
-                    <td> <a class="btn btn-warning" href="/CuentasHostel/Editar/@item.Id">Modificar</a> </td>
-                    <td> <a class="btn btn-danger" @onclick="()=>Eliminar(item.Id)">Eliminar</a> </td>
-                </tr>
+                @foreach (var item in cuentasH)
+                {
+                    <tr>
+                        <td>@item.Nombre</td>
+                        <td>Hostel</td>
+                        <td> <a class ="btn btn-dark" @onclick="()=>logCuenta(item.Id)" >Ingresar</a> </td>
+                        <td> <a class="btn btn-warning" href="/CuentasHostel/Editar/@item.Id">Modificar</a> </td>
+                        <td> <a class="btn btn-danger" @onclick="()=>Eliminar(item.Id)">Eliminar</a> </td>
+                    </tr>
+                }
             }
-        }
-    </tbody>
+        </tbody>
     
-    </table>
+        </table>
 
 
-    <div >
-        <button class="btn btn-danger" @onclick="@EliminarUsuario">Eliminar mi usuario</button>
-    </div>
+        <div >
+            <button class="btn btn-danger" @onclick="@EliminarUsuario">Eliminar mi usuario</button>
+        </div>
+</div>
+
 
     <Confirmacion  @ref ="confirmacion"
                 verOk = "true"

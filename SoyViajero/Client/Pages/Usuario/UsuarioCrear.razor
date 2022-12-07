@@ -2,8 +2,10 @@
 @inject IHttpService http
 @inject NavigationManager navigationManager
 
-<h3>Crear</h3>
-<FormUsuario usuario = "usuario" onCancel="Cancelar" onValidSubmit="Buscar"/>
+<div class="content">
+    <FormUsuario usuario = "usuario" onCancel="Cancelar" onValidSubmit="Buscar"/>
+</div>
+
 
 <Confirmacion
                 @ref ="confirmacion"
@@ -31,7 +33,7 @@
         {
             var body = httpRespuesta.HttpResponseMessage;
         }
-        navigationManager.NavigateTo("/"); 
+        navigationManager.NavigateTo("/Cuentas"); 
     }
 
     public async Task Buscar()
