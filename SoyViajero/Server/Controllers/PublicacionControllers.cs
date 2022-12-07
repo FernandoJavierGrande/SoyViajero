@@ -10,7 +10,7 @@ namespace SoyViajero.Server.Controllers
 {
     [ApiController]
     [Route("api/Publicacion")]
-    //[Authorize]
+    
     public class PublicacionController : ControllerBase
     {
         private readonly Context context;
@@ -70,6 +70,7 @@ namespace SoyViajero.Server.Controllers
         #endregion
 
         #region post
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<int>> Post(Publicacion publicacion)
         {
@@ -101,6 +102,7 @@ namespace SoyViajero.Server.Controllers
         #endregion
 
         #region Delete
+        [Authorize]
         [HttpDelete("{id:int}")]
         public ActionResult Delete(int id)
         {

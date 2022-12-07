@@ -38,7 +38,7 @@
 
     public async Task Buscar()
     {
-        var resp = await http.Get<bool>($"/Buscar/{usuario.NombreUser}");
+        var resp = await http.Get<bool>($"api/Login/Buscar/{usuario.NombreUser}");
         if (!resp.Error)
         {
             if (!resp.Respuesta)
