@@ -1,0 +1,48 @@
+﻿@page "/ListaHostel/{txtBusqueda}"
+@inject IHttpService http
+@inject NavigationManager nav
+
+<table class="table">
+    @if (hostels == null)
+    {
+        <tr>Cargando</tr>
+    }else if (hostels.Count == 0)
+    {
+        <tr>No se encontró '@txtBusqueda'</tr>
+
+    }else
+    {
+        @foreach(var hostel in hostels)
+        {
+            <tr>
+                <td>@hostel.Nombre</td>
+                <td>@hostel.Ciudad</td>
+                <td> <a class="btn btn-primary" href="/Perfil/@hostel.Id">Ver</a> </td>
+            </tr>
+        }
+    }
+</table>
+
+@code {
+    [Parameter]
+    public string txtBusqueda { get; set; }
+    private List<CuentaHostel> hostels = new List<CuentaHostel>();
+    protected override async Task OnInitializedAsync()
+    {
+        await Buscar();
+    }
+
+    private async Task Buscar()
+    {
+        if (!txtBusqueda.Equals(string.Empty))
+        {
+            var resp = await http.Get<List<CuentaHostel>>($"api/hostels/{txtBusqueda}");
+            if (!resp.Error)
+            {
+                hostels = resp.Respuesta;
+                Console.WriteLine(hostels.Count);
+            }
+        }
+    }
+
+}
