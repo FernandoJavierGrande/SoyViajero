@@ -3,15 +3,54 @@
 @inject NavigationManager navigationManager
 
 <div class="content">
-    <a class= "btn btn-primary" href="Cuentas/CrearHostel">Crear nueva cuenta de hostel</a>
-    <a class= "btn btn-primary" href="Cuentas/CrearViajero">Crear nueva cuenta de viajero</a>
-
-    <table class="table table-hover">
+    <div class="botones">
+        <a class= "btnCrearCuenta" href="Cuentas/CrearHostel">Crear nueva cuenta de hostel</a>
+        <a class= "btnCrearCuenta" href="Cuentas/CrearViajero">Crear nueva cuenta de viajero</a>
+    </div>
+    <div class="containerCards">
+            @if (cuentasH == null && cuentaV ==null)
+            {
+                <span>Cargando</span>
+            }
+            else if (cuentasH.Count == 0 && cuentaV == null)
+            {
+                <span>No hay datos disponibles</span>
+            }
+            else
+            {
+                @if (cuentaV!=null)
+                {
+                    <div class="cardCuenta">
+                        <div class="fotoCard" @*style="background-image: url(@cuentaV.FotoPerfil);"*@></div>
+                        <span>@cuentaV.Nombre @cuentaV.Apellido</span>
+                        <div class="botonesCard">
+                            <button class ="btnCard" @onclick="()=>logCuenta(cuentaV.Id)">Ingresar</button>
+                            <button class="btnCard" @onclick="()=>redirectViajeroMod(cuentaV)">Modificar</button>
+                            <button class="btnCardEliminar" @onclick="()=>Eliminar(cuentaV.Id)">Eliminar</button>
+                        </div>
+ 
+                    </div>
+                }
+                @foreach (var item in cuentasH)
+                {
+                    <div class="cardCuenta">
+                        <div class="fotoCard"></div>
+                        <span>@item.Nombre</span>
+                        <div class="botonesCard">
+                            <button class ="btnCard" @onclick="()=>logCuenta(item.Id)">Ingresar</button>
+                            <button class="btnCard" @onclick="()=>redirectHostelMod(item)">Modificar</button>
+                            <button class="btnCardEliminar" @onclick="()=>Eliminar(item.Id)">Eliminar</button>
+                        </div>
+                    </div>
+                }
+            }
+    </div>
+@*    <table class="table table-hover">
         <thead>
             <tr>
                 <th scope="col">Nombre</th>
                 <th scope="col">Tipo de cuenta</th> 
-                @*<th scope="col"> </th>*@
+                <th scope="col"> </th>
                 <th scope="col"> </th>
                 <th scope="col"> </th>
                 <th scope="col"> </th>
@@ -38,8 +77,6 @@
                         <td> <a class="btn btn-danger" @onclick="()=>Eliminar(cuentaV.Id)">Eliminar</a> </td>
                     </tr>
                 }
-           
-
                 @foreach (var item in cuentasH)
                 {
                     <tr>
@@ -52,15 +89,9 @@
                 }
             }
         </tbody>
-    
-        </table>
-
-
-        <div >
-            <button class="btn btn-danger" @onclick="@EliminarUsuario">Eliminar mi usuario</button>
-        </div>
+        </table>*@
 </div>
-
+    <button class="btnEliminarUsr" @onclick="@EliminarUsuario">Eliminar mi usuario</button>
 
     <Confirmacion  @ref ="confirmacion"
                 verOk = "true"
@@ -187,7 +218,13 @@
         banderaDelete = false;
         confirmacion.Ver();
     }
-
-   
+    private void redirectHostelMod(CuentaHostel cuentaHActual)
+    {
+        navigationManager.NavigateTo($"/CuentasHostel/Editar/{cuentaHActual.Id}");
+    }
+    private void redirectViajeroMod(CuentaViajero cuentaVActual)
+    {
+        navigationManager.NavigateTo($"/CuentasViajero/Editar/{cuentaVActual.Id}");
+    }
 }
 

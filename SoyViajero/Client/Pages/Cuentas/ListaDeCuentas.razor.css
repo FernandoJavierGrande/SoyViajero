@@ -1,0 +1,95 @@
+﻿.content {
+    top: 5rem;
+    position: relative;
+    margin: auto;
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.botones {
+    width: 60%;
+    display: flex;
+    justify-content: space-evenly;
+    margin-bottom: 2em;
+}
+.btnCrearCuenta {
+    background-color: #FFF;
+    border-radius: 5px;
+    padding: 0.5em;
+    text-decoration: none;
+    color: #FFB800;
+    font-weight: bold;
+    font-size: 16px;
+}
+.containerCards {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap; 
+}
+.cardCuenta {
+    width: 20rem;
+    background-color: #FFFF;
+    height: 20rem;
+    border-radius: 20px;
+    padding: 1em;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bolder;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+}
+.fotoCard {
+    width: 10em;
+    height: 10em;
+    border-radius: 50%;
+    background-image: url(https://img.freepik.com/premium-photo/tourism-travelling-ukraine-girl-girl-raised-her-hands-up-enjoys-mountain-hills-view_255847-1904.jpg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+.botonesCard {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+.btnCard {
+    border: none;
+    border-radius: 5px;
+    padding: 0.3em 1em;
+    font-size: 14px;
+    background-color: #FDC830;
+}
+    .btnCard:hover {
+        background-color: #FFBB00;
+    }
+.btnCardEliminar {
+    border: none;
+    border-radius: 5px;
+    padding: 0.3em 1em;
+    font-size: 14px;
+    background-color: #F37335;
+}
+    .btnCardEliminar:hover {
+        background-color: #F05409;
+    }
+.btnEliminarUsr {
+    position: fixed;
+    right: 1em;
+    bottom: 1em;
+    border: none;
+    border-radius: 5px;
+    padding: 0.5em 1em;
+    font-size: 14px;
+    background-color: #FFFFFF;
+    color: #F37335;
+    font-weight: bold;
+}
+    .btnEliminarUsr:hover {
+        background-color: #F37335;
+        color: #FFFFFF;
+    }

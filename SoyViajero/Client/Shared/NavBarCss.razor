@@ -45,7 +45,7 @@
                         }
                         else
                         {
-                        <div class="containter_desplegable">
+                        <div class="containter_desplegable" @onfocusout="()=>expandeSubMenu =! expandeSubMenu">
                             <a class="dropdown-item" href="Perfil/@cuentaActiva" role="button" data-bs-toggle="dropdown" aria-expanded="false" @onclick="()=>expandeSubMenu =! expandeSubMenu">
                             Mi Perfil
                             </a>
