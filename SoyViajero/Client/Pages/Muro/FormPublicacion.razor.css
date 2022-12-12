@@ -1,0 +1,37 @@
+﻿.containerInpBtns{
+    width:100%;
+    height:80%;
+    display:flex;
+}
+.contInput {
+    width: 90%;
+    padding: 1em;
+}
+.btnsCancFoto {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1em;
+}
+.btns{
+    background-color: #FFF;
+    border: none;
+}
+.divBtnPublicar {
+    width: 100%;
+    border-top: 1px solid #FFB800;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20%;
+}
+
+.btnPublicar {
+    border: none;
+    border-radius: 5px;
+    width: 40%;
+    height: 60%;
+    background-color: #FFB800;
+}

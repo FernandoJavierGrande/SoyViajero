@@ -2,11 +2,9 @@
 @inject IHttpService http
 @inject NavigationManager navigationManager
 
-<h3>Crear</h3>
-<FormCuentasHostel cuentaHostel="cuentaHostel" onCancel="Cancelar" onValidSubmit="Grabar"/>
-
-
-
+<div class="content">
+    <FormCuentasHostel cuentaHostel="cuentaHostel" onCancel="Cancelar" onValidSubmit="Grabar"/>
+</div>
 
 @code {
     private CuentaHostel cuentaHostel = new CuentaHostel();

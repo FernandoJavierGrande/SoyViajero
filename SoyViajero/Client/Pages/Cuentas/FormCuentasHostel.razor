@@ -1,78 +1,49 @@
-﻿<EditForm Model="cuentaHostel" OnValidSubmit="onValidSubmit">
+﻿<EditForm Model="cuentaHostel" OnValidSubmit="onValidSubmit" class="formCuenta">
     <DataAnnotationsValidator/>
-    <div class="form-group">
-            <label>Nombre</label>
-            <div>
-                <InputText class="form-control" @bind-Value="@cuentaHostel.Nombre"/>
+    <div class="containerDatos">
+        <div class="cardDatos">
+            <div class="divInp">
+                <InputText class="inputForm" placeholder="Nombre" @bind-Value="@cuentaHostel.Nombre"/>
                 <ValidationMessage For="@(() => cuentaHostel.Nombre)"/>
-
             </div>
-    </div>
-
-    <div class="form-group">
-            <label>Ciudad</label>
-            <div>
-                <InputText class="form-control" @bind-Value="@cuentaHostel.Ciudad"/>
+            <div class="divInp">
+                <InputText class="inputForm" placeholder="Ciudad" @bind-Value="@cuentaHostel.Ciudad"/>
                 <ValidationMessage For="@(() => cuentaHostel.Ciudad)"/>
-
             </div>
-    </div>
-
-        <div class="form-group">
-            <label>Provincia</label>
-            <div>
-                <InputText class="form-control" @bind-Value="@cuentaHostel.Provincia"/>
-                <ValidationMessage For="@(() => cuentaHostel.Provincia)"/>
-
+            <div class="divInp">
+            <InputText class="inputForm" placeholder="Provincia" @bind-Value="@cuentaHostel.Provincia"/>
+            <ValidationMessage For="@(() => cuentaHostel.Provincia)"/>
             </div>
-    </div>
-
-        <div class="form-group">
-            <label>País</label>
-            <div>
-                <InputText class="form-control" @bind-Value="@cuentaHostel.Pais"/>
+            <div class="divInp">
+                <InputText class="inputForm" placeholder="País" @bind-Value="@cuentaHostel.Pais"/>
                 <ValidationMessage For="@(() => cuentaHostel.Pais)"/>
-
             </div>
-    </div>
+        </div>
 
-    <div class="form-group">
-            <label>Descripción</label>
-            <div>
-                <InputText class="form-control" @bind-Value="@cuentaHostel.Descripcion"/>
+        <div class="cardDatos">
+            <div class="divInp">
+                <InputText class="inputForm" placeholder="Descripción" @bind-Value="@cuentaHostel.Descripcion"/>
                 <ValidationMessage For="@(() => cuentaHostel.Descripcion)"/>
-
             </div>
-    </div>
-
-    <div class="form-group">
-            <label>Foto</label>
-            <div>
-                <InputText class="form-control" @bind-Value="@cuentaHostel.FotoPerfil"/>
+            <div class="divInp">
+                <InputText class="inputForm" placeholder="Foto" @bind-Value="@cuentaHostel.FotoPerfil"/>
                 <ValidationMessage For="@(() => cuentaHostel.FotoPerfil)"/>
-
             </div>
-    </div>
-
-        <div class="form-group">
-            <label>Teléfono</label>
-            <div>
-                <InputNumber class="form-control" @bind-Value="@cuentaHostel.Telefono"/>  @*cambiar a texto en bbdd*@
+            <div class="divInp">
+                <InputNumber class="inputForm" placeholder="Teléfono de contacto" @bind-Value="@cuentaHostel.Telefono"/>  @*cambiar a texto en bbdd*@
                 <ValidationMessage For="@(() => cuentaHostel.Telefono)"/>
-
             </div>
-    </div>
-    <div class="form-group">
-            <label>Mail</label>
-            <div>
-                <InputText class="form-control" @bind-Value="@cuentaHostel.Mail"/>
+            <div class="divInp">
+                <InputText class="inputForm" placeholder="Mail de contacto" @bind-Value="@cuentaHostel.Mail"/>
                 <ValidationMessage For="@(() => cuentaHostel.Mail)"/>
-
             </div>
+        </div>
+    </div>
+    <div class="containerBtns">
+        <button class="btnSubmit" type="submit">@txt_btn_ok</button>
+        <button class="btnCancelar" @onclick="onCancel">Cancelar</button>
     </div>
 
-    <button class="btn btn-primary" type="submit">@txt_btn_ok</button>
-    <button class="btn btn-secondary" @onclick="onCancel">Cancelar</button>
 </EditForm>
 
 @code {

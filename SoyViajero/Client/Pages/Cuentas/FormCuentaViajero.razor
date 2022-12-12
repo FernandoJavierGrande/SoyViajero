@@ -1,89 +1,52 @@
-﻿<EditForm Model="cuentaViajero" OnValidSubmit="onValidSubmit">
-
+﻿<EditForm Model="cuentaViajero" OnValidSubmit="onValidSubmit" class="formCuenta">
     <DataAnnotationsValidator/>
-    <div class="form-group">
-            <label>Nombre</label>
-            <div>
-                <InputText class="form-control" @bind-Value="cuentaViajero.Nombre"/>
+    <div class="containerDatos">
+        <div class="cardDatos"> 
+            <div class="divInp">
+                <InputText class="form-control" placeholder="Nombre" @bind-Value="cuentaViajero.Nombre"/>
                 <ValidationMessage For="@(() => cuentaViajero.Nombre)"/>
-
             </div>
-    </div>
-
-    <div class="form-group">
-            <label>Apellido</label>
-            <div>
-                <InputText class="form-control" @bind-Value="@cuentaViajero.Apellido"/>
+            <div class="divInp">
+                <InputText class="form-control" placeholder="Apellido" @bind-Value="@cuentaViajero.Apellido"/>
                 <ValidationMessage For="@(() => cuentaViajero.Apellido)"/>
-
-            </div>
-    </div>
-
-    <div class="form-group">
-            <label>Ciudad</label>
-            <div>
-                <InputText class="form-control" @bind-Value="@cuentaViajero.Ciudad"/>
+             </div>
+            <div class="divInp">
+                <InputText class="form-control" placeholder="Ciudad" @bind-Value="@cuentaViajero.Ciudad"/>
                 <ValidationMessage For="@(() => cuentaViajero.Ciudad)"/>
-
             </div>
-    </div>
-
-        <div class="form-group">
-            <label>Provincia</label>
-            <div>
-                <InputText class="form-control" @bind-Value="@cuentaViajero.Provincia"/>
+            <div class="divInp">
+                <InputText class="form-control" placeholder="Provincia" @bind-Value="@cuentaViajero.Provincia"/>
                 <ValidationMessage For="@(() => cuentaViajero.Provincia)"/>
-
             </div>
-    </div>
-
-        <div class="form-group">
-            <label>País</label>
-            <div>
-                <InputText class="form-control" @bind-Value="@cuentaViajero.Pais"/>
+        </div>
+        <div class="cardDatos">
+            <div class="divInp">
+                <InputText class="form-control" placeholder="País" @bind-Value="@cuentaViajero.Pais"/>
                 <ValidationMessage For="@(() => cuentaViajero.Pais)"/>
-
             </div>
-    </div>
-
-    <div class="form-group">
-            <label>Descripción</label>
-            <div>
-                <InputText class="form-control" @bind-Value="@cuentaViajero.Descripcion"/>
-                <ValidationMessage For="@(() => cuentaViajero.Descripcion)"/>
-
+            <div class="divInp">
+                <InputText class="form-control" placeholder="Descripción" @bind-Value="@cuentaViajero.Descripcion"/>
+                <ValidationMessage For="@(() => cuentaViajero.Descripcion)"/>                    
             </div>
-    </div>
-
-    <div class="form-group">
-            <label>Foto</label>
-            <div>
-                <InputText class="form-control" @bind-Value="@cuentaViajero.FotoPerfil"/>
+            <div class="divInp">
+                <InputText class="form-control" placeholder="Foto" @bind-Value="@cuentaViajero.FotoPerfil"/>
                 <ValidationMessage For="@(() => cuentaViajero.FotoPerfil)"/>
-
             </div>
-    </div>
-
-        <div class="form-group">
-            <label>Edad</label>
-            <div>
-                <InputNumber class="form-control" @bind-Value="@cuentaViajero.Edad"/>
+            <div class="divInp">
+                <InputNumber class="form-control" placeholder="Edad" @bind-Value="@cuentaViajero.Edad"/>
                 <ValidationMessage For="@(() => cuentaViajero.Edad)"/>
-
             </div>
-    </div>
-    <div class="form-group">
-            <label>Mail</label>
-            <div>
-                <InputText class="form-control" @bind-Value="@cuentaViajero.Mail"/>
+            <div class="divInp">
+                <InputText class="form-control" placeholder="Mail" @bind-Value="@cuentaViajero.Mail"/>
                 <ValidationMessage For="@(() => cuentaViajero.Mail)"/>
-
             </div>
+        </div>
     </div>
-    
+    <div class="containerBtns">
+        <button class="btnSubmit" type="submit">@txt_btn_ok</button>
+        <button class="btnCancelar" @onclick="onCancel">Cancelar</button>
+    </div>
 
-    <button class="btn btn-primary" type="submit">@txt_btn_ok</button>
-    <button class="btn btn-secondary" @onclick="onCancel">Cancelar</button>
 </EditForm>
 
 @code {
