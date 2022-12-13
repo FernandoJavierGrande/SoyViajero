@@ -21,7 +21,7 @@
                 @if (cuentaV!=null)
                 {
                     <div class="cardCuenta">
-                        <div class="fotoCard" @*style="background-image: url(@cuentaV.FotoPerfil);"*@></div>
+                        <div class="fotoCard" style="background-image: url(@cuentaV.FotoPerfil);"></div>
                         <span>@cuentaV.Nombre @cuentaV.Apellido</span>
                         <div class="botonesCard">
                             <button class ="btnCard" @onclick="()=>logCuenta(cuentaV.Id)">Ingresar</button>
@@ -34,7 +34,7 @@
                 @foreach (var item in cuentasH)
                 {
                     <div class="cardCuenta">
-                        <div class="fotoCard"></div>
+                        <div class="fotoCard" style="background-image: url(@item.FotoPerfil);"></div>
                         <span>@item.Nombre</span>
                         <div class="botonesCard">
                             <button class ="btnCard" @onclick="()=>logCuenta(item.Id)">Ingresar</button>

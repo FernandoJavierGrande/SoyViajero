@@ -2,12 +2,10 @@
 @inject IHttpService http
 @inject NavigationManager nav
 
-<h3>Modificar cuenta de viajero</h3>
-
-<FormCuentaViajero cuentaViajero="cuentaV" onValidSubmit="Guardar" onCancel="Cancelar" txt_btn_ok="Modificar">
-
-</FormCuentaViajero>
-
+<div class="content">
+    <FormCuentaViajero cuentaViajero="cuentaV" onValidSubmit="Guardar" onCancel="Cancelar" txt_btn_ok="Modificar">
+    </FormCuentaViajero>
+</div>
 @code {
     [Parameter]
     public string IdCuenta { get; set; }

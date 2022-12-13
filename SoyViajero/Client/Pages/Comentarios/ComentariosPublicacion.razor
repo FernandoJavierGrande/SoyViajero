@@ -1,8 +1,9 @@
 ﻿@page "/Muro/Comentarios/{publicacionId:int}"
 @inject IHttpService http
-<h3>ComentariosPublicacion</h3>
 
-<table>
+<Publicac publicacion="@publicacion"></Publicac>
+
+@*<table>
     <tr>
         <td>Publicacion: "</td>
         <td>@publicacion.Texto "</td>
@@ -14,7 +15,7 @@
     <div class="form-group">
         <td> del @publicacion.FechaCreacion.ToShortDateString()</td>
     </div>
-
+*@
 
  @if (comentarios.Count<1)
  {
@@ -29,7 +30,6 @@
         {
              <label> El @item.FechaCreacion.ToShortDateString() @item.Nombre comentó: </label>
              <label>@item.texto </label>
-             
          }
          </div>
      }
@@ -66,7 +66,6 @@
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-
         await Leer();
     }
 
@@ -83,8 +82,9 @@
         var respuestaPublicacion = await http.Get<Publicacion>($"api/Publicacion/{publicacionId}");
         if(!respuesta.Error)
         {
-            publicacion = respuestaPublicacion.Respuesta;  
-        }        
+            publicacion = respuestaPublicacion.Respuesta;
+            Console.Write(publicacion.ID);
+        }      
     }
     private void close()
     {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -23,6 +24,7 @@ namespace SoyViajero.BBDD.Data.Entidades
         public string CuentasId { get; set; }
 
         public string fotoPublicacion { get; set; }
+        //public Byte[] Imagen { get; set; }
 
         //public CuentaHostel cuentaHostel;
         //public CuentaViajero cuentaViajero;

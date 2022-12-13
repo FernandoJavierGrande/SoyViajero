@@ -1,13 +1,11 @@
 ﻿@page "/CuentasHostel/Editar/{IdCuenta}"
 @inject IHttpService http
 @inject NavigationManager nav
-<h3>Modificar cuenta de hostel</h3>
 
-
-<FormCuentasHostel cuentaHostel="cuentaH" onCancel="Cancelar" onValidSubmit="Guardar" txt_btn_ok="Modificar">
-
-</FormCuentasHostel>
-
+<div class="content">
+    <FormCuentasHostel cuentaHostel="cuentaH" onCancel="Cancelar" onValidSubmit="Guardar" txt_btn_ok="Modificar">
+    </FormCuentasHostel>
+</div>
 
 @code {
     [Parameter]
