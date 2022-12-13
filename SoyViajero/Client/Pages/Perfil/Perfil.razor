@@ -55,11 +55,11 @@
     }
 
     
-    @if (publicaciones != null)
+    @if (publicaciones.Count > 0)
     {
         @foreach(var item in publicaciones)
         {
-            <Publicac publicacion="@item"></Publicac>
+            <Publicac publicacion="@item" perfil = "logueado"></Publicac>
         }
     }
 </div>
@@ -107,21 +107,10 @@
     }    
     private async Task readPublicaciones()
     {
-        if (cuentaHostelLogueada != null)
+        var respuesta = await http.Get<List<Publicacion>>($"/Publicaciones/{IdCuenta}");
+        if (!respuesta.Error)
         {
-            var respuesta = await http.Get<List<Publicacion>>($"/Publicaciones/{cuentaHostelLogueada.Id}");
-            if (!respuesta.Error)
-            {
-                publicaciones = respuesta.Respuesta;
-
-            }           
-        }
-        else if(cuentaViajeroLogueada != null)
-        {
-            var respuesta = await http.Get<List<Publicacion>>($"/Publicaciones/{cuentaViajeroLogueada.Id}");
-            if (!respuesta.Error)
-            {
-                publicaciones = respuesta.Respuesta;
+            publicaciones = respuesta.Respuesta;
 
             }   
         }

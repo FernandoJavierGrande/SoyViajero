@@ -36,8 +36,8 @@
 
 @code {
     List<Publicacion> publicaciones = new List<Publicacion>();
-    //Confirmacion confirmacion;
-    Publicacion PublicacionBorrar = new Publicacion();
+    
+    
 
 
     protected override async Task OnInitializedAsync()
@@ -55,26 +55,5 @@
         }
     }
 
-    //private void Eliminar(Publicacion publicacionBorrar)
-    //{
-    //    PublicacionBorrar = publicacionBorrar;
-    //    confirmacion.Ver();
-    //}
-
-    //private void Cancelar()
-    //{
-    //    confirmacion.Ocultar();
-    //    PublicacionBorrar = null;
-    //}
-
-    //private async Task Borrar()
-    //{
-    //    var respuesta = await http.Delete($"api/Publicaciones/{PublicacionBorrar.ID}");
-    //    if(respuesta.Error)
-    //    {
-    //        var body = "Error";
-    //    }
-    //    Cancelar();
-    //    await Leer();
-    //}
+    
 }

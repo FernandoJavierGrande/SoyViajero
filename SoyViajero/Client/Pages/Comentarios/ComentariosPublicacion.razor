@@ -1,54 +1,42 @@
 ﻿@page "/Muro/Comentarios/{publicacionId:int}"
 @inject IHttpService http
+@inject NavigationManager nav
+
+<Publicac publicacion="@publicacion"></Publicac>
 
 
-<div class="content">
-    <Publicac publicacion="@publicacion"></Publicac>
-
-    @*<table>
-        <tr>
-            <td>Publicacion: "</td>
-            <td>@publicacion.Texto "</td>
-        </tr>
-    </table>
-        <div class="form-control-sm">
-            <img src="@publicacion.fotoPublicacion" width="300" height="200" alt="Imagen de la publicacion"/>
-        </div>
-        <div class="form-group">
-            <td> del @publicacion.FechaCreacion.ToShortDateString()</td>
-        </div>
-    *@
-
-     @if (comentarios.Count<1)
+ @if (comentarios.Count<1)
+ {
+     <label> No hay comentarios</label>
+ }
+ else
+ {
+     @foreach (var item in comentarios)
      {
-         <span class="sinComent">No hay comentarios</span>
-     }
-     else
-     {
-         <div class="containerComentarios">
-         @foreach (var item in comentarios)
-         {
-                 @if (item.PublicacionId == publicacionId)
-            {
-                <div class="comentario">
-                     <span> El @item.FechaCreacion.ToShortDateString() @item.Nombre comentó: @item.texto</span>
-               @*      <label>@item.texto </label>*@
-                </div>
-             }   
-         }
+         <div class="form-control">
+             @if (item.PublicacionId == publicacionId)
+             {
+                <label> El @item.FechaCreacion.ToShortDateString() @item.Nombre comentó: </label>
+                <label>@item.texto </label>
+             }
          </div>
      }
-    <ComentarPublicacion @ref="NuevoComentario"
-                    verOk="true"
-                    verCancelar="true"
-                    textOk="Comentar"
-                    onCancel="close"
-                    onConfirm="EnviarComentario"
-                    Titulo="comentar">
-                    <input @bind=@texto/>
-     </ComentarPublicacion>
-     <button class="btnComentar" @onclick=@verCom>Comentar</button>
-</div>
+ }
+        
+
+<ComentarPublicacion @ref="NuevoComentario"
+                verOk="true"
+                verCancelar="true"
+                textOk="Comentar"
+                onCancel="close"
+                onConfirm="EnviarComentario"
+                Titulo="comentar">
+
+                <input @bind=@texto/>
+
+ </ComentarPublicacion>
+
+ <button class="btn btn-secondary" @onclick=@verCom>comentar</button>
 
 
 @code {
@@ -57,6 +45,7 @@
     private Publicacion publicacion = new Publicacion();
     private string texto = string.Empty;
     private string nombre = string.Empty;
+    private bool logueado = false;
     ComentarPublicacion NuevoComentario;
 
 
@@ -64,6 +53,7 @@
     {
         await base.OnInitializedAsync();
         await Leer();
+        await cuenta();
     }
 
 
@@ -73,25 +63,28 @@
         if(!respuesta.Error)
         {
             comentarios = respuesta.Respuesta;
-
         }
 
         var respuestaPublicacion = await http.Get<Publicacion>($"api/Publicacion/{publicacionId}");
         if(!respuesta.Error)
         {
             publicacion = respuestaPublicacion.Respuesta;
-            Console.Write(publicacion.ID);
         }      
     }
     private void close()
     {
-        Console.WriteLine($"comentario: {texto}");
-
         NuevoComentario.Ocultar();
     }
     private void verCom()
     {
-        NuevoComentario.Ver();
+        if (logueado)
+        {
+            NuevoComentario.Ver();
+        }
+        else
+        {
+            nav.NavigateTo("/Login");
+        }
     }
 
     private async Task EnviarComentario()
@@ -108,40 +101,18 @@
         {
             var body = resp.HttpResponseMessage;
         }
-        StateHasChanged();
+        nav.NavigateTo($"/Muro/Comentarios/{publicacionId}",true);
         close();
 
     }
-    private async Task TraerCuenta(string id)
+    private async Task cuenta()
     {
-        Console.WriteLine("entro a traer cuenta");
-
-        if (id.Contains("h"))
+        var res = await http.Get<Usuario>("api/Login/Consulta");
+        if (!res.Error && res.Respuesta.NombreUser != "null")
         {
-            var resp = await http.Get<CuentaHostel>($"/BuscarHostel/{id}");
-            if (resp.Error)
             {
-                var body = resp.HttpResponseMessage;
-
+                logueado = true;
             }
-            else
-            {
-                nombre = resp.Respuesta.Nombre;
-                StateHasChanged();
-            }
-        }
-        else
-        {
-            var resp = await http.Get<CuentaViajero>($"/BuscarViajero/{id}");
-            if (resp.Error)
-            {
-                var body = resp.HttpResponseMessage;
-            }
-            else
-            {
-                nombre = $"{resp.Respuesta.Nombre} {resp.Respuesta.Apellido}";
-                StateHasChanged();
-            }  
         }
     }
 

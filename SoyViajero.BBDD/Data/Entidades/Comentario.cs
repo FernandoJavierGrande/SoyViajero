@@ -14,19 +14,14 @@ namespace SoyViajero.BBDD.Data.Entidades
         [MaxLength(300, ErrorMessage = "El comentario no debe superar los {1} caracteres")]
         public string texto { get; set; }
 
-        //PublicacionId
         [Required(ErrorMessage = "Id publicacion es obligatorio")]
         public int PublicacionId { get; set; }
 
-
-        //public Publicacion Publicaciones { get; set; }
-
-        //CuentasId
         [Required(ErrorMessage = "Cuenta es obligatorio")]
         public string CuentasId { get; set; }
 
         [NotMapped]
-        public string Nombre { get; set; }
+        public string Nombre { get; set; } 
 
     }
 }

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace SoyViajero.Server.Controllers
 {
-    [Authorize]
+    
     [ApiController]
     [Route("api/Comentario")]
     public class ComentarioController : ControllerBase
@@ -42,14 +42,13 @@ namespace SoyViajero.Server.Controllers
                 return BadRequest(e);
             }
         }
-            
 
+        
         [HttpGet("/Comentarios/{id:int}")]
         public async Task<ActionResult<List<Comentario>>> GetId(int id)
         {
             try
             {
-                //var cuentaActiva = User.Claims.Where(x => x.Type == "cuentaActiva").Select(c => c.Value).First();
 
                 var comentarios = await context.Comentarios
                         .Where(x => x.PublicacionId == id)
@@ -87,6 +86,7 @@ namespace SoyViajero.Server.Controllers
         #endregion
 
         #region Post
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<Comentario>> Post(Comentario coment)
         {
@@ -107,6 +107,7 @@ namespace SoyViajero.Server.Controllers
         #endregion
 
         #region Delete
+        [Authorize]
         [HttpDelete("{id:int}")]
         public ActionResult Delete(int id)
         {

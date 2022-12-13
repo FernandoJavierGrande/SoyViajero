@@ -22,8 +22,9 @@ namespace SoyViajero.Server.Controllers
 
 
         #region GET
+        
         [HttpGet("/Publicaciones")]
-        public async Task<ActionResult<List<Publicacion>>> Get() // para perfil
+        public async Task<ActionResult<List<Publicacion>>> Get() // para perfil logueado
         {
             var CuentaActivaId = User.Claims.Where(c => c.Type == "cuentaActiva").Select(x => x.Value).FirstOrDefault();
             if (CuentaActivaId == null)
@@ -33,6 +34,20 @@ namespace SoyViajero.Server.Controllers
                                 .Where(p => p.CuentasId == CuentaActivaId)
                                 .ToListAsync();
             
+            if (publicaciones == null)
+            {
+                return NotFound($"No hay publicaciones para mostrar");
+            }
+            return publicaciones;
+        }
+        [HttpGet("/Publicaciones/{id}")]
+        public async Task<ActionResult<List<Publicacion>>> perfiles(string id) // para perfil sin loguear
+        {
+           
+            var publicaciones = await context.Publicaciones
+                                .Where(p => p.CuentasId == id)
+                                .ToListAsync();
+
             if (publicaciones == null)
             {
                 return NotFound($"No hay publicaciones para mostrar");
@@ -56,7 +71,7 @@ namespace SoyViajero.Server.Controllers
         }
 
 
-        [HttpGet("{id:int}")] //METODO HTTP GET. ASICRONA. 
+        [HttpGet("{id:int}")] 
         public async Task<ActionResult<Publicacion>> Get(int id)
         {
             var publicacion = await context.Publicaciones.Where
@@ -105,9 +120,8 @@ namespace SoyViajero.Server.Controllers
                 await context.SaveChangesAsync();
                 return publicacion.ID;
             }
-            catch (Exception e) //cambiar
+            catch (Exception e)
             {
-                Console.WriteLine($"error en el servidor {e}");
                 return BadRequest(e.Message);
             }
         }
