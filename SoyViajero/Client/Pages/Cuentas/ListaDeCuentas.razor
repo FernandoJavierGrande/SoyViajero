@@ -26,7 +26,7 @@
                         <div class="botonesCard">
                             <button class ="btnCard" @onclick="()=>logCuenta(cuentaV.Id)">Ingresar</button>
                             <button class="btnCard" @onclick="()=>redirectViajeroMod(cuentaV)">Modificar</button>
-                            <button class="btnCardEliminar" @onclick="()=>Eliminar(cuentaV.Id)">Eliminar</button>
+                            <button class="btnCardEliminar" @onclick="()=>EliminarCuenta(cuentaV.Id)">Eliminar</button>
                         </div>
  
                     </div>
@@ -39,7 +39,7 @@
                         <div class="botonesCard">
                             <button class ="btnCard" @onclick="()=>logCuenta(item.Id)">Ingresar</button>
                             <button class="btnCard" @onclick="()=>redirectHostelMod(item)">Modificar</button>
-                            <button class="btnCardEliminar" @onclick="()=>Eliminar(item.Id)">Eliminar</button>
+                            <button class="btnCardEliminar" @onclick="()=>EliminarCuenta(item.Id)">Eliminar</button>
                         </div>
                     </div>
                 }
@@ -110,7 +110,7 @@
 
 @code {
     List<CuentaHostel> cuentasH = new List<CuentaHostel>();
-    CuentaViajero  cuentaV = new CuentaViajero();
+    CuentaViajero cuentaV;
     Usuario usuario = new Usuario();
     Confirmacion confirmacion;
     private string mensajeConfirmacion, mensajeTitulo;
@@ -144,14 +144,6 @@
         var respuesta = await http.Get<int>($"api/Login/{Id}");
         if (!respuesta.Error)
         {
-            //if (Id.Contains("h"))
-            //{
-            //    navigationManager.NavigateTo($"/PerfilHostel/{Id}");
-            //}
-            //else
-            //{
-            //    navigationManager.NavigateTo($"/PerfilViajero/{Id}");
-            //}
             navigationManager.NavigateTo($"/Perfil/{Id}");
 
         }
@@ -193,12 +185,13 @@
                 var body = "Error";
             }
             Cerrar();
+            
             navigationManager.NavigateTo("/");
         }
 
 
     }
-    private void Eliminar(string idCuenta)
+    private void EliminarCuenta(string idCuenta)
     {
         CuentaElim = idCuenta;
         mensajeConfirmacion = $"¿Desea eliminar la cuenta {CuentaElim}?";

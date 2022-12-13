@@ -36,9 +36,9 @@
                     <div class="containter_desplegable_buscar">
                         @foreach (var hostel in hostels)
                         {
-                            <a class="dropdown-item" href="/Perfil/@hostel.Id" role="button" data-bs-toggle="dropdown" aria-expanded="false" @onclick="()=>exp_busqueda =! exp_busqueda">
+                            <button class="dropdown-item" @*href="Perfil/@hostel.Id"*@ role="button" data-bs-toggle="dropdown" aria-expanded="false" @onclick="@irAPerfil">
                             @hostel.Nombre en @hostel.Ciudad
-                            </a>
+                            </button>
                         }  
                     </div>  
                 }
@@ -93,6 +93,7 @@
     private bool logueado = false;
     private string cuentaActiva = string.Empty;
     private string txtBusqueda = string.Empty;
+
     private List<CuentaHostel> hostels = new List<CuentaHostel>();
     private List<Publicacion> publicaciones = new List<Publicacion>();
 
@@ -119,7 +120,6 @@
                 {
                     hostels = resp.Respuesta;
                     exp_busqueda = true;
-                    Console.WriteLine($"hostels ={hostels.Count}");
                 }
             }
         }
@@ -137,7 +137,7 @@
             }
         }
     }
-    
+
     private void cerrar()
     {
         logueado = false;
@@ -146,6 +146,11 @@
     public async Task Expandir()
     {
         expandeSubMenu = !expandeSubMenu;
-         await cuenta();     
+        await cuenta();     
+    }
+    public void irAPerfil()
+    {
+        exp_busqueda = !exp_busqueda;
+        
     }
 }
