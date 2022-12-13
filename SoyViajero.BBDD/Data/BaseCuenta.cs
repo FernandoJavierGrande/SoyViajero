@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,7 +27,8 @@ namespace SoyViajero.BBDD.Data
         public string Pais { get; set; }
         public string Descripcion { get; set; }
         public string FotoPerfil { get; set; }
-        //public MemoryStream Imagen { get; set; }
+
+        public MemoryStream ImagenPerfil { get; set; }
         #endregion
     }
 }
