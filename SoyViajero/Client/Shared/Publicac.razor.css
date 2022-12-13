@@ -10,6 +10,11 @@
 .nombreCuenta {
     font-weight: bold;
     font-size: 16px;
+    text-decoration:none;
+    color: #000000;
+}
+.nombreCuenta:hover{
+    text-decoration:underline;
 }
 .horaPublicacion {
     font-size: 10px;

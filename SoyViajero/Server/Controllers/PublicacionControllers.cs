@@ -67,6 +67,18 @@ namespace SoyViajero.Server.Controllers
             }
             return publicacion;
         }
+
+        [HttpGet("/Publicaciones/{CuentasId}")] 
+        public async Task<ActionResult<Publicacion>> Get(string CuentasId)
+        {
+            var publicacion = await context.Publicaciones.Where
+                                (p => p.CuentasId == CuentasId).FirstOrDefaultAsync();
+            if (publicacion == null)
+            {
+                return NotFound($"No existe una publicacion de Id= {CuentasId}");
+            }
+            return publicacion;
+        }
         #endregion
 
         #region post

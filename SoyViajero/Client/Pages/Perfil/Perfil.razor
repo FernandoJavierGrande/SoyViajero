@@ -26,36 +26,7 @@
     
     else if (!banderaCuenta)
     {
-@*        <div class ="card-deck">
-            <div class="card">
-                <ul class="list-group list-group-flush">
-                <li class="list-group-item">
-                    @cuentaViajeroLogueada.Nombre
-                </li>
-                <li class="list-group-item">
-                    @cuentaViajeroLogueada.Apellido
-                </li>
-                <li class="list-group-item">
-                    @cuentaViajeroLogueada.Edad
-                </li>
-                <li class="list-group-item">
-                    @cuentaViajeroLogueada.Pais
-                </li>
-                <li class="list-group-item">
-                    @cuentaViajeroLogueada.Provincia
-                </li>
-                <li class="list-group-item">
-                    @cuentaViajeroLogueada.Ciudad
-                </li>
-                <li class="list-group-item">
-                    @cuentaViajeroLogueada.Descripcion
-                </li>
-
-                </ul>
-            </div>
-        </div>*@
-
-            <div class="cardPerfil">
+         <div class="cardPerfil">
             <div class="foto" style="background-image: url(@cuentaViajeroLogueada.FotoPerfil)"></div>
             <div class="cardDatos">
                 <span>Soy <span class="nombreCta">@cuentaViajeroLogueada.Nombre @cuentaViajeroLogueada.Apellido</span></span>
@@ -107,45 +78,59 @@
     protected override async Task OnInitializedAsync()
     {
         await cuenta();
-
         await base.OnInitializedAsync();
-
-        
         await readPublicaciones();
         await readCuenta();
-
     }
     private async Task readCuenta()
     {
-            if (IdCuenta.Contains("h"))
+        if (IdCuenta.Contains("h"))
+        {
+            var respuesta = await http.Get<CuentaHostel>($"/BuscarHostel/{IdCuenta}");
+            if (!respuesta.Error)
             {
-                var respuesta = await http.Get<CuentaHostel>($"/BuscarHostel/{IdCuenta}");
-                if (!respuesta.Error)
-                {
-                    cuentaHostelLogueada = respuesta.Respuesta;
-                    banderaCuenta = true;
-                }                
-            } 
-            else if (IdCuenta.Contains("v"))
+                cuentaHostelLogueada = respuesta.Respuesta;
+                banderaCuenta = true;
+            }                
+        } 
+        else if (IdCuenta.Contains("v"))
+        {
+            var respuesta = await http.Get<CuentaViajero>($"/BuscarViajero/{IdCuenta}");
+            if (!respuesta.Error)
             {
-                var respuesta = await http.Get<CuentaViajero>($"/BuscarViajero/{IdCuenta}");
-                if (!respuesta.Error)
-                {
-                    cuentaViajeroLogueada = respuesta.Respuesta;
-                    banderaCuenta = false;
-                }                
-            
+                cuentaViajeroLogueada = respuesta.Respuesta;
+                banderaCuenta = false;
+            }                
+
         }  
 
     }    
     private async Task readPublicaciones()
     {
-        var respuesta = await http.Get<List<Publicacion>>("/Publicaciones");
-        if (!respuesta.Error)
+        if (cuentaHostelLogueada != null)
         {
-            publicaciones = respuesta.Respuesta;
+            var respuesta = await http.Get<List<Publicacion>>($"/Publicaciones/{cuentaHostelLogueada.Id}");
+            if (!respuesta.Error)
+            {
+                publicaciones = respuesta.Respuesta;
 
+            }           
         }
+        else if(cuentaViajeroLogueada != null)
+        {
+            var respuesta = await http.Get<List<Publicacion>>($"/Publicaciones/{cuentaViajeroLogueada.Id}");
+            if (!respuesta.Error)
+            {
+                publicaciones = respuesta.Respuesta;
+
+            }   
+        }
+         //var respuesta = await http.Get<List<Publicacion>>("/Publicaciones");
+         //   if (!respuesta.Error)
+         //   {
+         //       publicaciones = respuesta.Respuesta;
+
+         //   }
     }
     private async Task cuenta()
     {

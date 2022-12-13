@@ -5,11 +5,11 @@
     <div class="textos">
         @if(cuentaHostel != null)
         {
-            <span class="nombreCuenta">@cuentaHostel.Nombre</span>
+            <a href="Perfil/@cuentaHostel.Id" class="nombreCuenta" >@cuentaHostel.Nombre</a>
         }
         else if (cuentaViajero != null)
         {
-            <span class="nombreCuenta">@cuentaViajero.Nombre</span>
+            <a href="Perfil/@cuentaViajero.Id" class="nombreCuenta">@cuentaViajero.Nombre</a>
         }
         <br />
         <span class="horaPublicacion"> @publicacion.FechaCreacion</span>

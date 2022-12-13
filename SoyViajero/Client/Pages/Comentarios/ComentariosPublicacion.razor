@@ -1,57 +1,54 @@
 ﻿@page "/Muro/Comentarios/{publicacionId:int}"
 @inject IHttpService http
 
-<Publicac publicacion="@publicacion"></Publicac>
 
-@*<table>
-    <tr>
-        <td>Publicacion: "</td>
-        <td>@publicacion.Texto "</td>
-    </tr>
-</table>
-    <div class="form-control-sm">
-        <img src="@publicacion.fotoPublicacion" width="300" height="200" alt="Imagen de la publicacion"/>
-    </div>
-    <div class="form-group">
-        <td> del @publicacion.FechaCreacion.ToShortDateString()</td>
-    </div>
-*@
+<div class="content">
+    <Publicac publicacion="@publicacion"></Publicac>
 
- @if (comentarios.Count<1)
- {
-     <label> No hay comentarios</label>
- }
- else
- {
-     @foreach (var item in comentarios)
+    @*<table>
+        <tr>
+            <td>Publicacion: "</td>
+            <td>@publicacion.Texto "</td>
+        </tr>
+    </table>
+        <div class="form-control-sm">
+            <img src="@publicacion.fotoPublicacion" width="300" height="200" alt="Imagen de la publicacion"/>
+        </div>
+        <div class="form-group">
+            <td> del @publicacion.FechaCreacion.ToShortDateString()</td>
+        </div>
+    *@
+
+     @if (comentarios.Count<1)
      {
-         <div class="form-control">
-             @if (item.PublicacionId == publicacionId)
-        {
-             <label> El @item.FechaCreacion.ToShortDateString() @item.Nombre comentó: </label>
-             <label>@item.texto </label>
+         <span class="sinComent">No hay comentarios</span>
+     }
+     else
+     {
+         <div class="containerComentarios">
+         @foreach (var item in comentarios)
+         {
+                 @if (item.PublicacionId == publicacionId)
+            {
+                <div class="comentario">
+                     <span> El @item.FechaCreacion.ToShortDateString() @item.Nombre comentó: @item.texto</span>
+               @*      <label>@item.texto </label>*@
+                </div>
+             }   
          }
          </div>
      }
- }
-        
-
-     
-
-
-<ComentarPublicacion @ref="NuevoComentario"
-                verOk="true"
-                verCancelar="true"
-                textOk="Comentar"
-                onCancel="close"
-                onConfirm="EnviarComentario"
-                Titulo="comentar">
-
-                <input @bind=@texto/>
-
- </ComentarPublicacion>
-
- <button class="btn btn-secondary" @onclick=@verCom>comentar</button>
+    <ComentarPublicacion @ref="NuevoComentario"
+                    verOk="true"
+                    verCancelar="true"
+                    textOk="Comentar"
+                    onCancel="close"
+                    onConfirm="EnviarComentario"
+                    Titulo="comentar">
+                    <input @bind=@texto/>
+     </ComentarPublicacion>
+     <button class="btnComentar" @onclick=@verCom>Comentar</button>
+</div>
 
 
 @code {

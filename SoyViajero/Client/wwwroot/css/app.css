@@ -86,3 +86,10 @@ html, body {
 .divInp input:focus {
     outline:none;
 }
+.inputFoto {
+    border: none;
+}
+
+    .inputFoto:focus {
+        outline: none;
+    }
