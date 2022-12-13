@@ -27,7 +27,8 @@ namespace SoyViajero.BBDD.Data
         public string Pais { get; set; }
         public string Descripcion { get; set; }
         public string FotoPerfil { get; set; }
-        
+        [NotMapped]
+        public MemoryStream ImagenPerfil { get; set; }
         #endregion
     }
 }

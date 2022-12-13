@@ -106,15 +106,15 @@
 
     protected override async Task OnInitializedAsync()
     {
-        
         await cuenta();
 
         await base.OnInitializedAsync();
 
+        
         await readPublicaciones();
         await readCuenta();
-    }
 
+    }
     private async Task readCuenta()
     {
             if (IdCuenta.Contains("h"))
@@ -133,8 +133,10 @@
                 {
                     cuentaViajeroLogueada = respuesta.Respuesta;
                     banderaCuenta = false;
-                }  
-            }  
+                }                
+            
+        }  
+
     }    
     private async Task readPublicaciones()
     {
@@ -142,6 +144,7 @@
         if (!respuesta.Error)
         {
             publicaciones = respuesta.Respuesta;
+
         }
     }
     private async Task cuenta()
