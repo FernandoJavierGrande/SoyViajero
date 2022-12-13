@@ -84,11 +84,11 @@
     }
 
     
-    @if (publicaciones != null)
+    @if (publicaciones.Count > 0)
     {
         @foreach(var item in publicaciones)
         {
-            <Publicac publicacion="@item"></Publicac>
+            <Publicac publicacion="@item" perfil = "logueado"></Publicac>
         }
     }
 </div>
@@ -140,7 +140,7 @@
     }    
     private async Task readPublicaciones()
     {
-        var respuesta = await http.Get<List<Publicacion>>("/Publicaciones");
+        var respuesta = await http.Get<List<Publicacion>>($"/Publicaciones/{IdCuenta}");
         if (!respuesta.Error)
         {
             publicaciones = respuesta.Respuesta;

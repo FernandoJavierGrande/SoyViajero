@@ -36,7 +36,7 @@
                     <div class="containter_desplegable_buscar">
                         @foreach (var hostel in hostels)
                         {
-                            <a class="dropdown-item" href="/Perfil/@hostel.Id" role="button" data-bs-toggle="dropdown" aria-expanded="false" @onclick="()=>exp_busqueda =! exp_busqueda">
+                            <a class="dropdown-item" role="button" data-bs-toggle="dropdown" aria-expanded="false" @onclick="()=>irAPerfil(hostel.Id)">
                             @hostel.Nombre en @hostel.Ciudad
                             </a>
                         }  
@@ -91,8 +91,10 @@
     private bool exp_busqueda;
     private bool expandeSubMenu;
     private bool logueado = false;
+
     private string cuentaActiva = string.Empty;
     private string txtBusqueda = string.Empty;
+
     private List<CuentaHostel> hostels = new List<CuentaHostel>();
     private List<Publicacion> publicaciones = new List<Publicacion>();
 
@@ -109,9 +111,6 @@
         txtBusqueda.Trim();
         if (!txtBusqueda.Equals(string.Empty) && !txtBusqueda.Equals(""))
         {
-            //StateHasChanged();
-            //navigationManager.NavigateTo($"/ListaHostel/{txtBusqueda}");
-
             if (!txtBusqueda.Equals(string.Empty))
             {
                 var resp = await http.Get<List<CuentaHostel>>($"api/hostels/{txtBusqueda}");
@@ -119,12 +118,15 @@
                 {
                     hostels = resp.Respuesta;
                     exp_busqueda = true;
-                    Console.WriteLine($"hostels ={hostels.Count}");
                 }
             }
         }
     }
-
+    public void irAPerfil(string id)
+    {
+        exp_busqueda = !exp_busqueda;
+        navigationManager.NavigateTo($"/Perfil/{id}",true);
+    }
 
     private async Task cuenta()
     {
@@ -137,7 +139,6 @@
             }
         }
     }
-    
     private void cerrar()
     {
         logueado = false;

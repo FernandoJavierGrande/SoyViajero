@@ -1,16 +1,10 @@
 ﻿@inject IHttpService http
+@inject NavigationManager nav
 
 
 <div class="containerPublicacion">
     <div class="textos">
-        @if(cuentaHostel != null)
-        {
-            <span class="nombreCuenta">@cuentaHostel.Nombre</span>
-        }
-        else if (cuentaViajero != null)
-        {
-            <span class="nombreCuenta">@cuentaViajero.Nombre</span>
-        }
+        <span class="nombreCuenta">@nombre</span>
         <br />
         <span class="horaPublicacion"> @publicacion.FechaCreacion</span>
         <p class="parrafo"> @publicacion.Texto</p>
@@ -22,14 +16,31 @@
         <path d="M2 1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h9.586a2 2 0 0 1 1.414.586l2 2V2a1 1 0 0 0-1-1H2zm12-1a2 2 0 0 1 2 2v12.793a.5.5 0 0 1-.854.353l-2.853-2.853a1 1 0 0 0-.707-.293H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12z"/>
         </svg>
         <a href="Muro/Comentarios/@publicacion.ID" class="linkComent">Comentarios</a>
+        @if (perfil)
+        {
+            <a class="btn" @onclick="()=>Eliminar(publicacion)"> Eliminar</a>
+        }
     </div>
 </div>
+<Confirmacion   @ref="confirmacion"
+                verOk = "true"
+                verCancelar = "true"
+                textOk="Eliminar"
+                Titulo="Elimnar Publicación"
+                onCancel="Cancelar"
+                onConfirm="Borrar">
 
+                <label> ¿Desea Eliminar la publicación?</label>
+</Confirmacion>
 
 @code {
     [Parameter] public Publicacion publicacion { get; set; }
-    public CuentaHostel cuentaHostel;
-    public CuentaViajero cuentaViajero;
+    [Parameter] public bool perfil { get; set; } = false;       
+    public CuentaHostel cuentaHostel = new CuentaHostel();
+    public CuentaViajero cuentaViajero = new CuentaViajero();
+    private Publicacion PublicacionBorrar = new Publicacion();
+    Confirmacion confirmacion;
+    public string nombre;
 
     protected override async Task OnInitializedAsync()
     {
@@ -38,15 +49,46 @@
     }
     private async Task Leer()
     {
-        var respuestaH = await http.Get<CuentaHostel>($"/BuscarHostel/{publicacion.CuentasId}");
-        if(!respuestaH.Error)
+        if (publicacion.CuentasId.Contains("h"))
         {
-            cuentaHostel = respuestaH.Respuesta;
+            var respuestaH = await http.Get<CuentaHostel>($"/BuscarHostel/{publicacion.CuentasId}");
+            if (!respuestaH.Error)
+            {
+                cuentaHostel = respuestaH.Respuesta;
+                nombre = cuentaHostel.Nombre;
+            }
         }
-        var respuestaV = await http.Get<CuentaViajero>($"/BuscarViajero/{publicacion.CuentasId}");
-        if(!respuestaV.Error)
+        else
         {
-            cuentaViajero = respuestaV.Respuesta;
+            var respuestaV = await http.Get<CuentaViajero>($"/BuscarViajero/{publicacion.CuentasId}");
+            if(!respuestaV.Error)
+            {
+                cuentaViajero = respuestaV.Respuesta;
+                nombre = $"{cuentaViajero.Nombre} {cuentaViajero.Apellido}";
+            }
+        }   
+    }
+    private void Eliminar(Publicacion publicacionBorrar)
+    {
+        PublicacionBorrar = publicacionBorrar;
+        confirmacion.Ver();
+    }
+
+    private void Cancelar()
+    {
+        confirmacion.Ocultar();
+        PublicacionBorrar = new Publicacion();
+    }
+
+    private async Task Borrar()
+    {
+        var respuesta = await http.Delete($"api/Publicacion/{PublicacionBorrar.ID}");
+        if(respuesta.Error)
+        {
+            var body = "Error";
         }
+        nav.NavigateTo("/Cuentas");
+        Cancelar();
+        await Leer();
     }
 }
