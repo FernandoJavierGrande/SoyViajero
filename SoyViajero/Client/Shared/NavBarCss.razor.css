@@ -41,6 +41,16 @@
     justify-content: space-evenly;
     box-shadow: 7px 6px 18px -11px rgba(82,58,11,1);
 }
+.containter_desplegable_buscar {
+    background-color: #FFFFFF;
+    position: fixed;
+    margin-right: 31.5em;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    box-shadow: 7px 6px 18px -11px rgba(82,58,11,1);
+}
 .containter_cuentaNoLogueada_desplegable {
     background-color: #FFFFFF;
     position: fixed;

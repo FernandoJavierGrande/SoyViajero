@@ -13,7 +13,7 @@
             </a>
         </div>
      </div>
-    <div class="buscador">
+    <div class="buscador" @onclick="()=>exp_busqueda = false">
         <div class="cuadro_busqueda">
             <input type="text" @bind="txtBusqueda"/>
             <button class="btn_buscador" @onclick=@Buscar>
@@ -22,6 +22,27 @@
             </svg>
                 <i class="bi bi-search"></i>
             </button>
+            @if (exp_busqueda)
+            {
+                @if (hostels.Count < 1)
+                {
+                    <div class="containter_desplegable_buscar">
+                        <a class="dropdown-item" role="button" data-bs-toggle="dropdown" aria-expanded="false" @onclick="()=>exp_busqueda =! exp_busqueda">
+                            No se encontró ningun hostel.
+                        </a>
+                    </div>
+                }else
+                {
+                    <div class="containter_desplegable_buscar">
+                        @foreach (var hostel in hostels)
+                        {
+                            <a class="dropdown-item" href="/Perfil/@hostel.Id" role="button" data-bs-toggle="dropdown" aria-expanded="false" @onclick="()=>exp_busqueda =! exp_busqueda">
+                            @hostel.Nombre en @hostel.Ciudad
+                            </a>
+                        }  
+                    </div>  
+                }
+            }
         </div>
     </div>
     <div class="perfil">
@@ -67,10 +88,12 @@
         navigationManager.NavigateTo("/CrearPublicacion"); 
     }
 
+    private bool exp_busqueda;
     private bool expandeSubMenu;
     private bool logueado = false;
     private string cuentaActiva = string.Empty;
     private string txtBusqueda = string.Empty;
+    private List<CuentaHostel> hostels = new List<CuentaHostel>();
     private List<Publicacion> publicaciones = new List<Publicacion>();
 
     protected override async Task OnInitializedAsync()
@@ -81,13 +104,24 @@
 
     }
 
-    private void Buscar()
+    private async Task Buscar()
     {
         txtBusqueda.Trim();
         if (!txtBusqueda.Equals(string.Empty) && !txtBusqueda.Equals(""))
         {
-            StateHasChanged();
-            navigationManager.NavigateTo($"/ListaHostel/{txtBusqueda}");
+            //StateHasChanged();
+            //navigationManager.NavigateTo($"/ListaHostel/{txtBusqueda}");
+
+            if (!txtBusqueda.Equals(string.Empty))
+            {
+                var resp = await http.Get<List<CuentaHostel>>($"api/hostels/{txtBusqueda}");
+                if (!resp.Error)
+                {
+                    hostels = resp.Respuesta;
+                    exp_busqueda = true;
+                    Console.WriteLine($"hostels ={hostels.Count}");
+                }
+            }
         }
     }
 
